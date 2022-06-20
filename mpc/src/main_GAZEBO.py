@@ -19,13 +19,17 @@ import pymap3d as pm
 from casadi import sin, cos, pi
 from variables import *
 from std_msgs.msg import Float32
-from time import time, ctime
+from time import time, ctime, sleep
 from casadi import sin, cos, pi
 from sensor_msgs.msg import NavSatFix
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import Vector3Stamped
 from tf.transformations import euler_from_quaternion
 from supporting_variables_GAZEBO import *
+
+print("init: " + str(x_init) + ", " + str(y_init))
+print("target: " + str(x_target) + ", " + str(y_target))
+print("obstacle: " + str(obstacle_axis[0]) + ", " + str(obstacle_axis[1]))
 
 def gpsCallback(data):
     # print(data.latitude, data.longitude)
@@ -42,6 +46,7 @@ def gpsCallback(data):
         longitude_ori = longitude
         altitude_ori = altitude
         init_counter = False
+        print(str(latitude_ori) + ", " + str(longitude_ori) + ", "+str(altitude_ori))
 
     x_init_temp, y_init_temp, z_init_temp = pm.geodetic2enu(latitude, longitude,\
                             altitude, latitude_ori, longitude_ori, altitude_ori)

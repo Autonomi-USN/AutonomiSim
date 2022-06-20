@@ -17,7 +17,6 @@ from geometry_msgs.msg import Vector3Stamped
 from tf.transformations import euler_from_quaternion
 
 
-
 Q_x = 100
 Q_y = 100
 Q_theta = 100
@@ -40,8 +39,8 @@ u_init = 0
 v_init = 0
 r_init = 0
 
-x_target = ultimate_x_target = 20
-y_target = ultimate_y_target = 0
+x_target = ultimate_x_target = 11
+y_target = ultimate_y_target = 60
 theta_target = pi/2
 u_target = 1
 v_target = 1
@@ -59,7 +58,7 @@ obstacle_clearance = 5
 obstacle_stationary_trajectory = [[6.5,23]]
 obstacle_moving_trajectory = [[30,10],[20,20],[10,30],[0,40]]
 obstacleFlag = True
-movingTargetCounter = 1
+movingTargetCounter = -1
 
 #Plot
 graphLimitPos = 70

@@ -56,7 +56,7 @@
 
   <param name="$(arg namespace)/robot_description"
          command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(arg urdf)'
-         locked:=$(arg wamv_locked)		   
+         locked:=$(arg wamv_locked)
          thruster_config:=$(arg thrust_config)
          vrx_sensors_enabled:=$(arg vrx_sensors_enabled)
          namespace:=$(arg namespace) "/>
