@@ -25,7 +25,7 @@
 
 
 <world xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="ocean_waves" params="gain:=0.1 period:=5
+  <xacro:macro name="ocean_waves" params="gain:=0.3 period:=5
                      direction_x:=1.0 direction_y:=0.0
                      angle:=0.4 scale:=1.5">
   <model name='ocean_waves'>
