@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- 
+<!--
   Copyright (c) 2016 The UUV Simulator Authors.
   All rights reserved.
 
@@ -28,8 +28,8 @@
   # period = ${period} # Peak wave period [s]
   # gain = ${gain}  # Deterined at load time by the world xacro file
   number = 3        # Number of component waves
-  # scale = 1.5       # Spectrum sampling scale 
-  # direction_x = 1.0 # Direction of peak wave component 
+  # scale = 1.5       # Spectrum sampling scale
+  # direction_x = 1.0 # Direction of peak wave component
   # direction_y = 0.0
   # angle = 0.4       # Delta direction for components
   tau = 2.0         # Time constant for starting wave [s]
@@ -59,7 +59,7 @@
         <scale>${scale}</scale>
         <gain>${gain}</gain>
         <direction>${direction_x} ${direction_y}</direction>
-        <angle>${angle}</angle>        
+        <angle>${angle}</angle>
         <tau><%= tau %></tau>
         <amplitude><%= amplitude %></amplitude>  <!-- No effect for the PMS model -->
         <steepness><%= steepness %></steepness>
@@ -80,7 +80,7 @@
             <scale>${scale}</scale>
             <gain>${gain}</gain>
             <direction>${direction_x} ${direction_y}</direction>
-            <angle>${angle}</angle>        
+            <angle>${angle}</angle>
             <tau><%= tau %></tau>
             <amplitude><%= amplitude %></amplitude>  <!-- No effect for the PMS model -->
             <steepness><%= steepness %></steepness>
@@ -120,4 +120,3 @@
   </model>
   </xacro:macro>
 </world>
-

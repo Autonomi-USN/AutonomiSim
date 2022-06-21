@@ -13,8 +13,8 @@
     <xacro:usv_wind_gazebo>
       <wind_objs>
         <wind_obj>
-          <name>wamv</name>
-          <link_name>wamv/base_link</link_name>
+          <name>usn_drone</name>
+          <link_name>usn_drone/base_link</link_name>
           <coeff_vector>.5 .5 .33</coeff_vector>
         </wind_obj>
       </wind_objs>

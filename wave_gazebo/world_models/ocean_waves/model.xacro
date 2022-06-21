@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!-- 
+<!--
   Copyright (c) 2016 The UUV Simulator Authors.
   All rights reserved.
 
@@ -42,7 +42,7 @@
         <scale>${scale}</scale>
         <gain>${gain}</gain>
         <direction>${direction_x} ${direction_y}</direction>
-        <angle>${angle}</angle>        
+        <angle>${angle}</angle>
         <tau>2.0</tau>
         <amplitude>0.0</amplitude>  <!-- No effect for the PMS model -->
         <steepness>0.0</steepness>
@@ -63,7 +63,7 @@
             <scale>${scale}</scale>
             <gain>${gain}</gain>
             <direction>${direction_x} ${direction_y}</direction>
-            <angle>${angle}</angle>        
+            <angle>${angle}</angle>
             <tau>2.0</tau>
             <amplitude>0.0</amplitude>  <!-- No effect for the PMS model -->
             <steepness>0.0</steepness>
@@ -103,4 +103,3 @@
   </model>
   </xacro:macro>
 </world>
-

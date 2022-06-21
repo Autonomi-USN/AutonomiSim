@@ -2,10 +2,10 @@
 <world xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="usv_wind_gazebo"
                params="**wind_objs
-                         direction:=270
-                         mean_vel:=0
-                         var_gain:=0
-                         var_time:=2
+                         direction:=270.0
+                         mean_vel:=20.0
+                         var_gain:=20.0
+                         var_time:=2.0
                          seed:=''
                          ros_update_rate:=10
                          topic_wind_speed:=/vrx/debug/wind/speed

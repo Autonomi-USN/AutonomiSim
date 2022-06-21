@@ -22,7 +22,7 @@
     noise_stddev: Standard deviation of gaussian noise applied to output pointcloud
   -->
   <xacro:macro name="wamv_3d_lidar" params="name
-                                            x:=0.7 y:=0 z:=1.8
+                                            x:=0.7 y:=0 z:=0.05
                                             R:=0 P:=0 Y:=0
                                             post_Y:=0 post_z_from:=1.2965
                                             update_rate:=10 vertical_lasers:=16 samples:=1875 resolution:=0.1
