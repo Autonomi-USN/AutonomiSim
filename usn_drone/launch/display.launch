@@ -6,7 +6,7 @@
     default="False" />
   <param
     name="robot_description"
-    textfile="$(find usn_drone)/urdf/usn_drone.urdf" />
+    textfile="$(find usn_drone_gazebo)/urdf/usn_drone_gazebo.urdf" />
   <param
     name="use_gui"
     value="$(arg gui)" />
@@ -17,7 +17,7 @@
   <node
     name="robot_state_publisher"
     pkg="robot_state_publisher"
-    type="state_publisher" />
+    type="robot_state_publisher" />
   <node
     name="rviz"
     pkg="rviz"
