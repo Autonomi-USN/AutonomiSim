@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="wamv_ball_shooter" params="name:='ball_shooter' frameId:='wamv/ball_shooter' x:=0.55 y:=0.35 z:=1.4 pitch:='0' yaw:='0'">
+  <xacro:macro name="usn_drone_ball_shooter" params="name:='ball_shooter' frameId:='usn_drone/ball_shooter' x:=0.55 y:=0.35 z:=1.4 pitch:='0' yaw:='0'">
 
     <link name="${namespace}/${name}_base_link">
       <visual name="${name}_base_visual">
@@ -66,7 +66,7 @@
         <projectile>
           <model_name>blue_projectile</model_name>
           <link_name>link</link_name>
-          <frame>wamv/ball_shooter_launcher_link</frame>
+          <frame>usn_drone/ball_shooter_launcher_link</frame>
           <pose>0.14 0 0 0 0 0</pose>
         </projectile>
         <num_shots>4</num_shots>

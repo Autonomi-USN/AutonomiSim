@@ -8,6 +8,7 @@ if(POLICY CMP0054)
 endif()
 
 find_package(catkin REQUIRED COMPONENTS
+  usn_drone_description
   wamv_description
   usv_gazebo_plugins
   xacro

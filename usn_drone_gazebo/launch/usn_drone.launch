@@ -12,19 +12,19 @@
   <!-- Start in a default namespace -->
   <arg name="namespace" default="usn_drone"/>
   <!-- Do we lock the vessel to the world? -->
-  <arg name="wamv_locked" default="false" />
+  <arg name="usn_drone_locked" default="false" />
   <!-- Start paused? -->
   <arg name="paused" default="false"/>
   <!-- Acoustic pinger position(s) -->
   <arg name="pinger_params" default="$(find vrx_gazebo)/config/pinger.yaml"/>
 
   <!-- Initial USV location and attitude-->
-  <arg name="x" default="-532" />
-  <arg name="y" default="162" />
+  <arg name="x" default="-490" />
+  <arg name="y" default="220" />
   <arg name="z" default="0" />
   <arg name="P" default="0" />
   <arg name="R" default="0" />
-  <arg name="Y" default="1" />
+  <arg name="Y" default="0" />
 
   <!-- Allow user specified thruster configurations
        H = stern trusters on each hull
@@ -56,7 +56,7 @@
 
   <param name="$(arg namespace)/robot_description"
          command="$(find xacro)/xacro &#x002D;&#x002D;inorder '$(arg urdf)'
-         locked:=$(arg wamv_locked)
+         locked:=$(arg usn_drone_locked)
          thruster_config:=$(arg thrust_config)
          vrx_sensors_enabled:=$(arg vrx_sensors_enabled)
          namespace:=$(arg namespace) "/>

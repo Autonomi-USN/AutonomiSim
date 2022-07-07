@@ -1,0 +1,32 @@
+<launch>
+  <arg
+    name="model" />
+  <arg
+    name="gui"
+    default="False" />
+  <param
+    name="robot_description"
+    textfile="$(find usn_drone_gazebo)/urdf/usn_drone_gazebo.urdf" />
+  <param
+    name="use_gui"
+    value="$(arg gui)" />
+  <node
+    name="joint_state_publisher"
+    pkg="joint_state_publisher"
+    type="joint_state_publisher" />
+  <node
+    name="robot_state_publisher"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher" />
+  <node
+    name="rviz"
+    pkg="rviz"
+    type="rviz"
+    args="-d $(find usn_drone)/urdf.rviz" />
+
+  <node pkg="tf"
+        type="static_transform_publisher"
+        name="link1_broadcaster"
+        args="-0.3 0 -0.11 0 0 0 base_link usn_drone 100" />
+
+</launch>
