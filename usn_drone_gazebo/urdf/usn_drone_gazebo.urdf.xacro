@@ -14,6 +14,9 @@
   <xacro:arg name="ball_shooter_enabled" default="false" />
   <xacro:arg name="thruster_namespace" default="thrusters/"/>
   <xacro:arg name="camera_namespace" default="cameras/"/>
+
+  <xacro:arg name="zed_namespace" default="zed/"/>
+
   <xacro:arg name="sensor_namespace" default="sensors/"/>
   <xacro:arg name="pinger_namespace" default="pingers/"/>
   <xacro:arg name="shooter_namespace" default="shooters/"/>
@@ -119,6 +122,8 @@
       <xacro:usn_drone_camera name="front_camera" y="0.3" x="0.75" P="${radians(15)}" />
     </xacro:if>
 
+    <!-- <xacro:usn_drone_camera name="zed" y="0" x="2" P="${radians(15)}" /> -->
+
     <!-- Add simulated GPS -->
     <xacro:if value="$(arg gps_enabled)">
       <xacro:usn_drone_gps name="gps_usn_drone" x="-0.85" />
@@ -157,8 +162,10 @@
       <xacro:cpu_cases position="-0.15 0 1.53" orientation="0 0 0"/-->
 
       <!-- Add a stereo camera pair -->
+
       <xacro:usn_drone_camera name="front_left_camera" y="0.1" x="0.75" P="${radians(15)}" />
-      <xacro:usn_drone_camera name="front_right_camera" y="-0.1" x="0.75" P="${radians(15)}" />
+      
+      <!-- <xacro:usn_drone_camera name="front_right_camera" y="-0.1" x="0.75" P="${radians(15)}" /> -->
 
       <!-- Add a camera facing right >
       <xacro:usn_drone_camera name="middle_right_camera" y="-0.45" P="${radians(15)}" Y="${radians(-90)}" post_Y="${radians(-90)}" /-->
