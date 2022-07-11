@@ -9,7 +9,7 @@ The VRX environment is also the "virtual venue" for the [VRX Competition](https:
 
 ![VRX](images/sydney_regatta.png)
 ![Ubuntu CI](https://github.com/osrf/vrx/workflows/Ubuntu%20CI/badge.svg)
-
+1
 ## Getting Started
 
  * Watch the [Release 1.5 Highlight Video](https://youtu.be/-2BP2P3CHYw)

@@ -6,7 +6,11 @@
 <!-- Basic WAM-V with gazebo plugins for dynamics -->
 <robot name="WAM-V">
   <!-- === Batteries === >
+<<<<<<< HEAD
   <xacro:include filename="$(find usn_drone_description)/urdf/battery.xacro"/>
+=======
+  <xacro:include filename="$(find wamv_description)/urdf/battery.xacro"/>
+>>>>>>> master
   <xacro:battery prefix="left" position="0 1 0.45" orientation="0 0 0"/>
   <xacro:battery prefix="right" position="0 -1 0.45" orientation="0 0 0"/-->
   <material name="blue">
@@ -41,7 +45,11 @@
   <link name="usn_drone/left_engine_link">
     <visual>
       <geometry>
+<<<<<<< HEAD
         <mesh filename="package://usn_drone_description/models/engine/mesh/engine.dae"/>
+=======
+        <mesh filename="package://wamv_description/models/engine/mesh/engine.dae"/>
+>>>>>>> master
       </geometry>
     </visual>
     <collision name="left_engine_vertical_axis_collision">
@@ -64,7 +72,11 @@
   <link name="usn_drone/left_propeller_link">
     <visual>
       <geometry>
+<<<<<<< HEAD
         <mesh filename="package://usn_drone_description/models/propeller/mesh/propeller.dae"/>
+=======
+        <mesh filename="package://wamv_description/models/propeller/mesh/propeller.dae"/>
+>>>>>>> master
       </geometry>
     </visual>
     <collision name="left_propeller_collision">
@@ -96,7 +108,11 @@
   <link name="usn_drone/right_engine_link">
     <visual>
       <geometry>
+<<<<<<< HEAD
         <mesh filename="package://usn_drone_description/models/engine/mesh/engine.dae"/>
+=======
+        <mesh filename="package://wamv_description/models/engine/mesh/engine.dae"/>
+>>>>>>> master
       </geometry>
     </visual>
     <collision name="right_engine_vertical_axis_collision">
@@ -119,7 +135,11 @@
   <link name="usn_drone/right_propeller_link">
     <visual>
       <geometry>
+<<<<<<< HEAD
         <mesh filename="package://usn_drone_description/models/propeller/mesh/propeller.dae"/>
+=======
+        <mesh filename="package://wamv_description/models/propeller/mesh/propeller.dae"/>
+>>>>>>> master
       </geometry>
     </visual>
     <collision name="right_propeller_collision">
@@ -149,7 +169,11 @@
     <dynamics damping="0.05" friction="0.05"/>
   </joint>
   <gazebo>
+<<<<<<< HEAD
     <plugin filename="libusv_gazebo_thrust_plugin.so" name="usn_drone_gazebo_thrust">
+=======
+    <plugin filename="libusv_gazebo_thrust_plugin.so" name="wamv_gazebo_thrust">
+>>>>>>> master
       <cmdTimeout>1.0</cmdTimeout>
       <publisherRate>100.0</publisherRate>
       <robotNamespace>usn_drone</robotNamespace>
@@ -187,7 +211,11 @@
   </gazebo>
   <!--Gazebo Plugin for simulating WAM-V dynamics-->
   <gazebo>
+<<<<<<< HEAD
     <plugin filename="libusv_gazebo_dynamics_plugin.so" name="usv_dynamics_usn_drone_dynamics_plugin">
+=======
+    <plugin filename="libusv_gazebo_dynamics_plugin.so" name="usv_dynamics_wamv_dynamics_plugin">
+>>>>>>> master
       <bodyName>usn_drone/base_link</bodyName>
       <!-- Must be same as the ocean model!-->
       <waterLevel>0.25</waterLevel>

@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+<<<<<<< HEAD:usn_drone_gazebo/urdf/components/usn_drone_imu.xacro
   <xacro:macro name="usn_drone_imu" params="name:=imu x:=0 y:=0 z:=0 R:=0 P:=0 Y:=0 update_rate:=15">
+=======
+  <xacro:macro name="wamv_imu" params="name:=imu x:=0 y:=0 z:=0 R:=0 P:=0 Y:=0 update_rate:=15">
+>>>>>>> master:usn_drone_gazebo/urdf/components/wamv_imu.xacro
     <link name="${namespace}/${name}_link">
       <visual name="${name}_visual">>
         <geometry>

@@ -29,7 +29,11 @@ R2 = 0.01
 
 step_horizon = 1  # time between steps in seconds?? 0.1 Try diefferent step size.
 N = 10              # number of look ahead steps?? May increase to 2 sec horizon
+<<<<<<< HEAD
 sim_time = 4500      # simulation time
+=======
+sim_time = 2000      # simulation time
+>>>>>>> master
 
 # specs
 x_init = 0
@@ -39,8 +43,13 @@ u_init = 0
 v_init = 0
 r_init = 0
 
+<<<<<<< HEAD
 x_target = ultimate_x_target = 10
 y_target = ultimate_y_target = 60
+=======
+x_target = ultimate_x_target = 40
+y_target = ultimate_y_target = 0
+>>>>>>> master
 theta_target = pi/2
 u_target = 1
 v_target = 1

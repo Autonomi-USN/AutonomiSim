@@ -128,7 +128,11 @@
 
     <!-- Add Simulated IMU -->
     <xacro:if value="$(arg imu_enabled)">
+<<<<<<< HEAD
       <xacro:usn_drone_imu name="imu_usn_drone" />
+=======
+      <xacro:wamv_imu name="imu_wamv" />
+>>>>>>> master
     </xacro:if>
 
     <!-- Add 3D LIDAR -->
@@ -160,6 +164,7 @@
 
       <!-- Add a stereo camera pair -->
 
+<<<<<<< HEAD
       <!-- <xacro:usn_drone_camera name="front_left_camera" y="0.1" x="0.75" P="${radians(15)}" /> -->
 
       <!-- <xacro:usn_drone_camera name="front_right_camera" y="-0.1" x="0.75" P="${radians(15)}" /> -->
@@ -172,12 +177,26 @@
 
       <!-- Add Simulated IMU -->
       <xacro:usn_drone_imu name="imu_usn_drone" x="-0.05" z="0.0" />
+=======
+      <!-- Add a camera facing right >
+      <xacro:wamv_camera name="middle_right_camera" y="-0.45" P="${radians(15)}" Y="${radians(-90)}" post_Y="${radians(-90)}" /-->
+
+      <!-- Add simulated GPS -->
+      <xacro:wamv_gps name="gps_wamv" x="0.05" z="0.0" />
+
+      <!-- Add Simulated IMU -->
+      <xacro:wamv_imu name="imu_wamv" x="-0.05" z="0.0" />
+>>>>>>> master
 
       <!-- Add 3D LIDAR -->
       <xacro:lidar name="lidar_usn_drone" type="16_beam" />
 
       <!-- Add pinger >
+<<<<<<< HEAD
       <xacro:usn_drone_pinger name="pinger" position="1.0 0 -1.0" /-->
+=======
+      <xacro:wamv_pinger name="pinger" position="1.0 0 -1.0" /-->
+>>>>>>> master
 
       <!-- Add ball shooter (default pitch angle: ~-60 deg) >
       <xacro:usn_drone_ball_shooter name="ball_shooter" x="0.54" y="0.30" z="1.296" pitch="-1.04"/-->
@@ -197,4 +216,8 @@
     </plugin>
   </gazebo>
 
+<<<<<<< HEAD
 </robot>
+=======
+</robot>
+>>>>>>> master
