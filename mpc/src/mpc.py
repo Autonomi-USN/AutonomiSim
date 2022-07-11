@@ -70,7 +70,7 @@ def service_cb(request):
     N = 10              # number of look ahead steps?? May increase to 2 sec horizon
     sim_time = 4500      # simulation time
 
-
+    foo = "bar"
     initial_orientation = rospy.wait_for_message('/usn_drone/sensors/imu/imu/data', Imu)
     initial_localization = rospy.wait_for_message('/usn_drone/robot_localization/odometry/filtered', Odometry)
     
