@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
-<<<<<<< HEAD
 <!-- Example of ROS localization using the example usn_drone with sensors -->
-=======
-<!-- Example of ROS localization using the example wamv with sensors -->
->>>>>>> master
 <launch>
 
   <!-- Supress tf warnings -->
@@ -11,11 +7,7 @@
 
   <!-- Kalman filter fusing imu and gps into combined odometry/tf -->
   <node ns="usn_drone/robot_localization" pkg="robot_localization" type="ekf_localization_node"
-<<<<<<< HEAD
         name="ekf_localization" clear_params="true">
-=======
-        name="ekf_localization" clear_params="false">
->>>>>>> master
     <param name="sensor_timeout" value="2.0"/>
     <param name="two_d_mode" value="false"/>
     <param name="map_frame" value="map"/>
@@ -23,11 +15,7 @@
     <param name="base_link_frame" value="usn_drone/base_link"/>
     <param name="world_frame" value="usn_drone/odom"/>
     <param name="publish_tf" value="true"/>
-<<<<<<< HEAD
     <param name="frequency" value="60"/>
-=======
-    <param name="frequency" value="30"/>
->>>>>>> master
     <param name="imu0" value="/usn_drone/sensors/imu/imu/data"/>
     <!-- IMU measures orientation, angular velocity, and linear acceleration -->
     <rosparam param="imu0_config">[false, false, false,
@@ -48,27 +36,13 @@
 
     <param name="odom0_differential" value="false"/>
     <param name="smooth_lagged_data" value="true"/>
-<<<<<<< HEAD
-=======
-    <rosparam param="initial_state">[0.0,  0.0,  0.0,
-                                    0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.0] </rosparam>
->>>>>>> master
   </node>
 
   <!-- Produces local odometry from GPS to be used in Kalman filter -->
   <node ns="usn_drone/robot_localization" pkg="robot_localization" type="navsat_transform_node"
-<<<<<<< HEAD
         name="navsat_transform_node" respawn="true" output="screen" clear_params="true">      
     <param name="tf_prefix" value="usn_drone"/> 
     <param name="frequency" value="60"/>
-=======
-        name="navsat_transform_node" respawn="true" output="screen">
-    <param name="tf_prefix" value="usn_drone"/>
-    <param name="frequency" value="30"/>
->>>>>>> master
     <param name="magnetic_declination_radians" value="0"/>
     <param name="broadcast_utm_transform" value="true"/>
     <param name="wait_for_datum" value="false"/>
@@ -76,12 +50,6 @@
     <rosparam param="datum">[-33.73, 150.67]</rosparam>
     <param name="yaw_offset" value="0"/>
     <param name="publish_filtered_gps" value="true"/>
-<<<<<<< HEAD
     <remap to="/usn_drone/sensors/gps/gps/fix" from="/usn_drone/robot_localization/gps/fix" />
-=======
-
-    <remap to="/usn_drone/sensors/gps/gps/fix" from="/usn_drone/robot_localization/gps/fix" />
-
->>>>>>> master
   </node>
 </launch>
