@@ -11,5 +11,9 @@
 
   <arg name="rviz_config" default="$(find usn_drone_gazebo)/config/rviz_vrx.rviz" />
   <node pkg="rviz" type="rviz"
+<<<<<<< HEAD
+        name="usn_drone_visualization" args="-d $(arg rviz_config)" />
+=======
         name="wamv_visualization" args="-d $(arg rviz_config)" />
+>>>>>>> master
 </launch>
