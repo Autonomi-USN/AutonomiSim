@@ -25,11 +25,6 @@ class Node():
         
         self.driveMsgRight.data = linfac*data.linear.x - angfac*data.angular.z
         self.driveMsgLeft.data = linfac*data.linear.x + angfac*data.angular.z
-        
-        if  data.angular.z != 0:
-            compensation = self.calculate_linear_compensation(np.abs(data.angular.z))
-            self.driveMsgLeft.data -= compensation
-            self.driveMsgRight.data -= compensation
 
         self.left_pub.publish(self.driveMsgLeft)
         self.right_pub.publish(self.driveMsgRight)

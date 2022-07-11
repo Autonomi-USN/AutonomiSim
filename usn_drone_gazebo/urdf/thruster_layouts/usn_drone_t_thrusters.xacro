@@ -12,7 +12,6 @@
       <xacro:include filename="$(find usn_drone_gazebo)/urdf/thruster_layouts/usn_drone_gazebo_thruster_config.xacro" />
       <xacro:usn_drone_gazebo_thruster_config name="left" />
       <xacro:usn_drone_gazebo_thruster_config name="right" />
-      <!-- <xacro:usn_drone_gazebo_thruster_config name="lateral" /> -->
     </plugin>
   </gazebo>
 </robot>
