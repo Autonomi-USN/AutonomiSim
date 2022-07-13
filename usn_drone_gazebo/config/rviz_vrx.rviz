@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 749
@@ -21,7 +22,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: PointCloud2_Lidar
+    SyncSource: LaserScan
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -133,20 +134,78 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        goal_40_10:
+          Value: true
+        usn_drone/base_link:
+          Value: true
+        usn_drone/front_camera_link:
+          Value: true
+        usn_drone/front_camera_link_optical:
+          Value: true
+        usn_drone/front_camera_post_arm_link:
+          Value: true
+        usn_drone/front_camera_post_link:
+          Value: true
+        usn_drone/gps_usn_drone_link:
+          Value: true
+        usn_drone/imu_usn_drone_link:
+          Value: true
+        usn_drone/left_engine_link:
+          Value: true
+        usn_drone/left_propeller_link:
+          Value: true
+        usn_drone/lidar_usn_drone_link:
+          Value: true
+        usn_drone/lidar_usn_drone_post_arm_link:
+          Value: true
+        usn_drone/lidar_usn_drone_post_link:
+          Value: true
+        usn_drone/odom:
+          Value: true
+        usn_drone/right_engine_link:
+          Value: true
+        usn_drone/right_propeller_link:
+          Value: true
+        utm:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
-      Show Arrows: false
+      Show Arrows: true
       Show Axes: true
-      Show Names: true
+      Show Names: false
       Tree:
-        {}
+        usn_drone/odom:
+          goal_40_10:
+            {}
+          usn_drone/base_link:
+            usn_drone/front_camera_post_link:
+              usn_drone/front_camera_post_arm_link:
+                usn_drone/front_camera_link:
+                  usn_drone/front_camera_link_optical:
+                    {}
+            usn_drone/gps_usn_drone_link:
+              {}
+            usn_drone/imu_usn_drone_link:
+              {}
+            usn_drone/left_engine_link:
+              usn_drone/left_propeller_link:
+                {}
+            usn_drone/lidar_usn_drone_post_link:
+              usn_drone/lidar_usn_drone_post_arm_link:
+                usn_drone/lidar_usn_drone_link:
+                  {}
+            usn_drone/right_engine_link:
+              usn_drone/right_propeller_link:
+                {}
+          utm:
+            {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz/Image
       Enabled: false
       Image Topic: /usn_drone/sensors/cameras/front_left_camera/image_raw
@@ -328,7 +387,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: usn_drone/base_link
+    Fixed Frame: usn_drone/odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -352,7 +411,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 16.544763565063477
+      Distance: 5.23606014251709
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -360,17 +419,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 1.53687584400177
-        Y: -0.2176920473575592
-        Z: 5.104013442993164
+        X: -1.134984016418457
+        Y: 0.23060491681098938
+        Z: 1.3003748655319214
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3853597640991211
+      Pitch: 0.4703596234321594
       Target Frame: usn_drone/base_link
-      Yaw: 6.183037757873535
+      Yaw: 2.818033218383789
     Saved: ~
 Window Geometry:
   Displays:

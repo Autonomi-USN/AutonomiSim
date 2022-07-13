@@ -256,11 +256,11 @@ def drawObstacle(trajectory):
     #                ,color='r', fill=False)
     ax.add_artist(p)
 
-rospy.Subscriber("/usn_drone/sensors/gps/gps/fix", NavSatFix, gpsCallback)
-rospy.Subscriber("/usn_drone/sensors/imu/imu/data", Imu, imuCallback)
-rospy.Subscriber("/usn_drone/sensors/gps/gps/fix_velocity", Vector3Stamped, fixVelCallback)
-pub_r = rospy.Publisher('/usn_drone/thrusters/right_thrust_cmd', Float32, queue_size = 10)
-pub_l = rospy.Publisher('/usn_drone/thrusters/left_thrust_cmd', Float32, queue_size = 10)
+rospy.Subscriber("/wamv/sensors/gps/gps/fix", NavSatFix, gpsCallback)
+rospy.Subscriber("/wamv/sensors/imu/imu/data", Imu, imuCallback)
+rospy.Subscriber("/wamv/sensors/gps/gps/fix_velocity", Vector3Stamped, fixVelCallback)
+pub_r = rospy.Publisher('/wamv/thrusters/right_thrust_cmd', Float32, queue_size = 10)
+pub_l = rospy.Publisher('/wamv/thrusters/left_thrust_cmd', Float32, queue_size = 10)
 
 rospy.init_node('publisher_thruster_right', anonymous=True)
 rate = rospy.Rate(10)

@@ -29,18 +29,18 @@ R2 = 0.01
 
 step_horizon = 1  # time between steps in seconds?? 0.1 Try diefferent step size.
 N = 10              # number of look ahead steps?? May increase to 2 sec horizon
-sim_time = 4500      # simulation time
+sim_time = 4000      # simulation time
 
 # specs
 x_init = 0
 y_init = 0
-theta_init = pi*3/2
+theta_init = 0 #pi*3/2
 u_init = 0
 v_init = 0
 r_init = 0
 
-x_target = ultimate_x_target = 10
-y_target = ultimate_y_target = 60
+x_target = ultimate_x_target = 40
+y_target = ultimate_y_target = 0
 theta_target = pi/2
 u_target = 1
 v_target = 1
@@ -53,9 +53,9 @@ state_init = ca.DM([x_init, y_init, theta_init, u_init, v_init, r_init])        
 state_target = ca.DM([x_target, y_target, theta_target, u_target, v_target, r_target])  # target state
 
 #Obstacle
-obstacle_axis = [6.5,23]
+obstacle_axis = [20 ,0]
 obstacle_clearance = 5
-obstacle_stationary_trajectory = [[6.5,23]]
+obstacle_stationary_trajectory = [[20, 0]]
 obstacle_moving_trajectory = [[30,10],[20,20],[10,30],[0,40]]
 obstacleFlag = True
 movingTargetCounter = -1

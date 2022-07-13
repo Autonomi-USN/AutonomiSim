@@ -71,14 +71,8 @@
   <include file="$(find usn_drone_gazebo)/launch/rviz_usn_drone.launch" />
   <include file="$(find usn_drone_gazebo)/launch/pointcloud_to_laserscan.launch" />
   <include file="$(find usn_drone_gazebo)/launch/localization.launch" />
-  <node name="cmd_vel_to_thrust" pkg="usn_navigation" type="cmd_vel2.py" />
-  <node pkg="tf" type="static_transform_publisher" name="bouy1publisher" args="10 40 0 0 0 0 1 /usn_drone/odom /10_40 100"/> 
-  <node pkg="tf" type="static_transform_publisher" name="bouy2publisher" args="0 20 0 0 0 0 1 /usn_drone/odom /0_20 100"/> 
-  <node pkg="tf" type="static_transform_publisher" name="bouy3publisher" args="30 10 0 0 0 0 1 /usn_drone/odom /30_10 100"/> 
-  <node pkg="tf" type="static_transform_publisher" name="bouy4publisher" args="20 20 0 0 0 0 1 /usn_drone/odom /20_20 100"/> 
-  <node pkg="tf" type="static_transform_publisher" name="bouy5publisher" args="-10 -20 0 0 0 0 1 /usn_drone/odom /neg10_neg20 100"/>
-
+  <!-- <node name="cmd_vel_to_thrust" pkg="usn_navigation" type="cmd_vel2.py" /> -->
+  <node name="set_heading" pkg="mpc" type="set_heading.py" output="screen"/>
+  <node pkg="tf" type="static_transform_publisher" name="goal1_tf" args="40 10 0 0 0 0 1 /usn_drone/odom /goal_40_10 100"/> 
   
-
-
 </launch>

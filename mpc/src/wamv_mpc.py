@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 from time import time
-
-from sympy import euler
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 import casadi as ca
 import numpy as np
@@ -54,12 +52,6 @@ from nav_msgs.msg import Odometry
 def service_cb(request):
     global theta_target, DM2Arr, pub_r, pub_l, ultimate_x_target, ultimate_y_target, odom_init, odom, x_init, y_init, z_init, init_counter,latitude_ori, longitude_ori, altitude_ori, r_init, theta_init, u_init, v_init, mpc_iter, step_horizon, sim_time, state_init, state_target, obstacleFlag, args, state_init, state_target, n_states, n_controls, N, f, solver, nlp_prob, mpc_iter, u0, X0, t0, t, cat_states, cat_controls, cont_XP1, cont_XP2, times, x_init, y_init, theta_init, u_init, v_init, r_init, obstacleFlag, state_init, state_target, mpc_iter, movingTargetCounter, mpc_iter, ax, p, obstacle_axis, obstacle_clearance
     
-    x_target = request.pose.pose.pose.position.x
-    y_target = request.pose.pose.pose.position.y
-    ultimate_x_target = request.pose.pose.pose.position.x
-    ultimate_y_target = request.pose.pose.pose.position.y
-
-
     Q_x = 100
     Q_y = 100
     Q_theta = 100
@@ -72,57 +64,40 @@ def service_cb(request):
 
     step_horizon = 1  # time between steps in seconds?? 0.1 Try diefferent step size.
     N = 10              # number of look ahead steps?? May increase to 2 sec horizon
-    sim_time = 1300      # simulation time
-    
+    sim_time = 2500      # simulation time
 
-    #######################################################
-    #  SETTING HEADING TOWARDS OBJECT BEFORE STARTING MPC #
-    #######################################################
-
-    # rospy.loginfo('waiting for service: set_heading')
-    # rospy.wait_for_service('set_heading')
-    # service_server = rospy.ServiceProxy('set_heading', SetPose)
-    # query = SetPoseRequest()
-    # query.pose.pose.pose.position.x = x_target
-    # query.pose.pose.pose.position.y = y_target
-    # service_server(query)
-    
-    #######################################################
-
-    odometry = rospy.wait_for_message('/usn_drone/robot_localization/odometry/filtered', Odometry)
-    orientation_quats = odometry.pose.pose.orientation
-    (roll, pitch, yaw) = euler_from_quaternion((orientation_quats.x, orientation_quats.y, orientation_quats.z, orientation_quats.w))
-    
     # specs
     x_init = 0
     y_init = 0
-    theta_init = yaw #pi*3/2
+    theta_init = pi*3/2
     u_init = 0
     v_init = 0
     r_init = 0
 
-    theta_target = 0
+    x_target = ultimate_x_target = request.pose.pose.pose.position.x
+    y_target = ultimate_y_target = request.pose.pose.pose.position.y
+    theta_target = pi/2
     u_target = 1
     v_target = 1
     r_target = 1
 
-    v_max = 36.3*3
-    v_min = -28.45*3
+    v_max = 250
+    v_min = -100
 
     state_init = ca.DM([x_init, y_init, theta_init, u_init, v_init, r_init])        # initial state
     state_target = ca.DM([x_target, y_target, theta_target, u_target, v_target, r_target])  # target state
 
     #Obstacle
-    obstacle_axis = [13, 5]
+    obstacle_axis = [6.5,23]
     obstacle_clearance = 5
-    obstacle_stationary_trajectory = [[13, 5]]
+    obstacle_stationary_trajectory = [[6.5,23]]
     obstacle_moving_trajectory = [[30,10],[20,20],[10,30],[0,40]]
     obstacleFlag = True
     movingTargetCounter = -1
 
     #Plot
     graphLimitPos = 70
-    graphLimitNeg = -30
+    graphLimitNeg = -10
     ax = plt.gca()
     ax.set_xlim((graphLimitNeg,graphLimitPos))
     ax.set_ylim((graphLimitNeg,graphLimitPos))
@@ -138,15 +113,15 @@ def service_cb(request):
     #Loop variables
     mpc_iter = 0
 
-    m = 18      #Mass of USV
-    Iz = 50      #Value did not find in code gussed and set value
-    Xu = 20.3     #Value from code
-    Yv = 20
-    Nr = 20
-    Xdotu = 5#-0.08  #Value from code
-    Ydotv = 5#50   #Value from code
-    Ndotr = 1   #Value from code
-    dp = 0.14      #Value from code
+    m = 250      #Mass of USV
+    Iz = 495      #Value did not find in code gussed and set value
+    Xu = 53.1     #Value from code
+    Yv = 40
+    Nr = 400
+    Xdotu = 0#-0.08  #Value from code
+    Ydotv = -0#50   #Value from code
+    Ndotr = 0   #Value from code
+    dp = 2.4      #Value from code
 
     # state symbolic variables
     x = ca.SX.sym('x')
@@ -301,11 +276,11 @@ def service_cb(request):
 
         return t0, next_state, u0
 
-    rospy.Subscriber("/usn_drone/sensors/gps/gps/fix", NavSatFix, gpsCallback)
-    rospy.Subscriber("/usn_drone/sensors/imu/imu/data", Imu, imuCallback)
-    rospy.Subscriber("/usn_drone/sensors/gps/gps/fix_velocity", Vector3Stamped, fixVelCallback)
-    pub_r = rospy.Publisher('/usn_drone/thrusters/right_thrust_cmd', Float32, queue_size = 10)
-    pub_l = rospy.Publisher('/usn_drone/thrusters/left_thrust_cmd', Float32, queue_size = 10)
+    rospy.Subscriber("/wamv/sensors/gps/gps/fix", NavSatFix, gpsCallback)
+    rospy.Subscriber("/wamv/sensors/imu/imu/data", Imu, imuCallback)
+    rospy.Subscriber("/wamv/sensors/gps/gps/fix_velocity", Vector3Stamped, fixVelCallback)
+    pub_r = rospy.Publisher('/wamv/thrusters/right_thrust_cmd', Float32, queue_size = 10)
+    pub_l = rospy.Publisher('/wamv/thrusters/left_thrust_cmd', Float32, queue_size = 10)
 
     while True:
         #Check if target reached
@@ -331,7 +306,7 @@ def service_cb(request):
     ax.plot(0,0, 'o', color='k')
     ax.plot(ultimate_x_target, ultimate_y_target, 'o', color='r')
     plt.show()
-    #plt.cla()
+    plt.cla()
     return SetPoseResponse()
 
 def odomCallback(data): #this will update the current location and check for success

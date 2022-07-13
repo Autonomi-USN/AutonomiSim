@@ -13,8 +13,8 @@
       <!-- Optional Parameters -->
       <mappingType>1</mappingType>
       <maxCmd>1</maxCmd>
-      <maxForceFwd>100</maxForceFwd>
-      <maxForceRev>-100.0</maxForceRev>
+      <maxForceFwd>36.297</maxForceFwd>
+      <maxForceRev>-28.449</maxForceRev>
       <maxAngle>${pi/2}</maxAngle>
     </thruster>
   </xacro:macro>
