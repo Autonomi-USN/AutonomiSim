@@ -29,10 +29,6 @@ class Node():
         self.left_pub.publish(self.driveMsgLeft)
         self.right_pub.publish(self.driveMsgRight)
 
-
-    def calculate_linear_compensation(self, angular_velocity):
-        return 0.00006374885 + 0.7138145*angular_velocity - 1.507382*angular_velocity**2 + 1.243585*angular_velocity**3
-
 if __name__ == '__main__':
 
     rospy.init_node('cmd_vel2thrust', anonymous=True)
