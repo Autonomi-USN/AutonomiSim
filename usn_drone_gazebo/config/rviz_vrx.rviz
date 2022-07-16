@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 749
@@ -137,9 +136,11 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: false
-        goal_40_10:
+        -5_10:
           Value: true
+        20_10:
+          Value: true
+        All Enabled: false
         usn_drone/base_link:
           Value: true
         usn_drone/front_camera_link:
@@ -177,10 +178,12 @@ Visualization Manager:
       Name: TF
       Show Arrows: true
       Show Axes: true
-      Show Names: false
+      Show Names: true
       Tree:
         usn_drone/odom:
-          goal_40_10:
+          -5_10:
+            {}
+          20_10:
             {}
           usn_drone/base_link:
             usn_drone/front_camera_post_link:
@@ -344,16 +347,6 @@ Visualization Manager:
       Topic: /move_base/DWAPlannerROS/local_plan
       Unreliable: false
       Value: true
-    - Alpha: 0.699999988079071
-      Class: rviz/Map
-      Color Scheme: costmap
-      Draw Behind: false
-      Enabled: true
-      Name: Map
-      Topic: /move_base/local_costmap/costmap
-      Unreliable: false
-      Use Timestamp: false
-      Value: true
     - Alpha: 1
       Class: rviz/Polygon
       Color: 25; 255; 0
@@ -411,7 +404,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.23606014251709
+      Distance: 24.301311492919922
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -419,17 +412,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -1.134984016418457
-        Y: 0.23060491681098938
-        Z: 1.3003748655319214
+        X: 7.126639366149902
+        Y: 7.150178909301758
+        Z: 4.866597652435303
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4703596234321594
+      Pitch: 1.1347957849502563
       Target Frame: usn_drone/base_link
-      Yaw: 2.818033218383789
+      Yaw: 4.7498602867126465
     Saved: ~
 Window Geometry:
   Displays:
