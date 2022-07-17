@@ -68,7 +68,6 @@ class PDLineOfSight:
     def distance_from_goal(self):
         return np.sqrt((self.x_k1-self.x)**2+(self.y_k1-self.y)**2)
         
-
     def odom_cb(self, msg): #keeps track of current USV heading and position (x, y)
         quat = msg.pose.pose.orientation
         position = msg.pose.pose.position
@@ -98,14 +97,19 @@ class PDLineOfSight:
             elif self.error <= -pi:
                 self.error = self.error +2*pi
 
-            delta_n = self.PD_controller()
+            self.delta_n = self.PD_controller()
             self.error_prev = self.error
             
 
-            self.twist_msg.angular.z = -delta_n
+            self.twist_msg.angular.z = -self.delta_n
             self.twist_msg.linear.x = np.min([self.distance_from_goal() * 0.1, 1])
 
             self.pub.publish(self.twist_msg)
+            
+            
+            
+            
+            
             
             #publish error for live plotting 
             msg = Float32()
@@ -120,14 +124,11 @@ class PDLineOfSight:
             print('| heading   |', np.round(self.psi, 3))
             print('| heading_d |', np.round(self.x_d, 3))
             print('| error     |', np.round(self.error, 3))
-            print('| delta_n   |', np.round(delta_n, 3))
+            print('| delta_n   |', np.round(self.delta_n, 3))
             print('| lookahead |', np.round(self.delta, 5))
             print('---------------------')
         self.rate.sleep()
 
-        
-
-    
 
 if __name__ == "__main__":
     rospy.init_node('PD_line_of_sight')

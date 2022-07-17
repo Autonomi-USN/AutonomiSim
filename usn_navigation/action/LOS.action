@@ -1,0 +1,5 @@
+geometry_msgs/PoseArray poses
+----------
+bool success
+----------
+float32 distance
