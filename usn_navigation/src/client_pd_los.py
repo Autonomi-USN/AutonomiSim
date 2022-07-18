@@ -16,52 +16,64 @@ client = actionlib.SimpleActionClient('LOS_PD_action', LOSAction)
 client.wait_for_server()
 
 goal = LOSGoal()    
-
 pose = Pose()
 
 
-
-pose.position.x = 20
-pose.position.y = 20
+pose = Pose()
+pose.position.x, pose.position.y = 0, 0
 goal.poses.poses.append(pose)
+
+
+
 pose = Pose()
-
-
-
-pose.position.x = -20
-pose.position.y = 35
+pose.position.x, pose.position.y = 5, 20
 goal.poses.poses.append(pose)
+
+
+
 pose = Pose()
-
-
-
-pose.position.x = 0
-pose.position.y = 0
+pose.position.x, pose.position.y = 10, 0
 goal.poses.poses.append(pose)
+
+
+
 pose = Pose()
-
-
-
-pose.position.x = -5
-pose.position.y = 10
+pose.position.x, pose.position.y = 15, 20
 goal.poses.poses.append(pose)
-pose = Pose()
 
-pose.position.x = 20
-pose.position.y = 10
+
+
+pose = Pose()
+pose.position.x, pose.position.y = 20, 0
 goal.poses.poses.append(pose)
+
 pose = Pose()
-
-
-pose.position.x = 0
-pose.position.y = 0
+pose.position.x, pose.position.y = 25, 20
 goal.poses.poses.append(pose)
+
+
 pose = Pose()
+pose.position.x, pose.position.y = 30, 0
+goal.poses.poses.append(pose)
+
+pose = Pose()
+pose.position.x, pose.position.y = 35, 20
+goal.poses.poses.append(pose)
+
+pose = Pose()
+pose.position.x, pose.position.y = 5, 20
+goal.poses.poses.append(pose)
+
+pose = Pose()
+pose.position.x, pose.position.y = 30, 0
+goal.poses.poses.append(pose)
+
+pose = Pose()
+pose.position.x, pose.position.y = 0, 0
+goal.poses.poses.append(pose)
+
 
 client.send_goal(goal)
-time.sleep(2)
-#client.cancel_goal()
 client.wait_for_result()
 result = client.get_result()
-
 print(result)

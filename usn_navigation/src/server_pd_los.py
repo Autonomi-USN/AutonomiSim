@@ -34,7 +34,7 @@ class PDLineOfSight:
         self.delta_min = 0.1
         self.delta = 3
         self.gamma = 0.15
-        self.goal_proximity = 10
+        self.goal_proximity = 1
 
         #keep track of previous time-tick error and derivative part
         self.error_prev = 0
@@ -47,9 +47,10 @@ class PDLineOfSight:
         rospy.Subscriber('/usn_drone/robot_localization/odometry/filtered', Odometry, self.odom_cb, queue_size = 1)
         self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size = 10)
         self.pub_error = rospy.Publisher('/LOS_heading_error', Float32, queue_size = 10)
-        self._as = actionlib.SimpleActionServer('LOS_PD_action', LOSAction, execute_cb=self.execute_cb, auto_start = True)
+        self._as = actionlib.SimpleActionServer('LOS_PD_action', LOSAction, execute_cb=self.execute_cb, auto_start = False)
         self._as_cancel_sub = rospy.Subscriber('/LOS_PD_action/cancel', GoalID, self.set_cancelled, queue_size = 1)
         self._result = LOSResult()
+        self._as.start()
 
     def set_cancelled(self, msg): #cancels the action goal
         self.goal_active = False
@@ -113,17 +114,18 @@ class PDLineOfSight:
         self.goal_active = True
         self._result.success = False
 
-        self.goal_proximity = 10
         poses = goal.poses.poses
         feedback = LOSFeedback()
+        self.goal_proximity = 0.2
 
         for i in range(len(poses)-1):
             self.x_k, self.y_k = poses[i].position.x, poses[i].position.y
             self.x_k1, self.y_k1 = poses[i+1].position.x, poses[i+1].position.y
+            rospy.loginfo('pursuing line from:[' + str(self.x_k) + ', ' + str(self.y_k) + '] to: [' + str(self.x_k1) + ', ' + str(self.y_k1) + ']' )
 
             if i == len(poses)-2:
                 print('final goal')
-                self.goal_proximity = 0.5
+                self.goal_proximity = 0.2
             while True:
                 if (self.distance_from_goal() > self.goal_proximity and self.goal_active):
                     #gets angles and distances

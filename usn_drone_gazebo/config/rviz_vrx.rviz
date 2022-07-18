@@ -5,7 +5,10 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /TF1
         - /TF1/Frames1
+        - /TF1/Frames1/21
+        - /TF1/Frames1/31
       Splitter Ratio: 0.5
     Tree Height: 749
   - Class: rviz/Selection
@@ -136,9 +139,19 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        -5_10:
+        1:
           Value: true
-        20_10:
+        2:
+          Value: true
+        3:
+          Value: true
+        4:
+          Value: true
+        5:
+          Value: true
+        6:
+          Value: true
+        7:
           Value: true
         All Enabled: false
         usn_drone/base_link:
@@ -176,14 +189,24 @@ Visualization Manager:
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
-      Show Arrows: true
+      Show Arrows: false
       Show Axes: true
       Show Names: true
       Tree:
         usn_drone/odom:
-          -5_10:
+          1:
             {}
-          20_10:
+          2:
+            {}
+          3:
+            {}
+          4:
+            {}
+          5:
+            {}
+          6:
+            {}
+          7:
             {}
           usn_drone/base_link:
             usn_drone/front_camera_post_link:
@@ -376,6 +399,30 @@ Visualization Manager:
       Unreliable: false
       Use Timestamp: false
       Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Queue Size: 10
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic: /usn_drone/path
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -404,7 +451,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 24.301311492919922
+      Distance: 41.98545837402344
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -412,17 +459,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 7.126639366149902
-        Y: 7.150178909301758
-        Z: 4.866597652435303
+        X: 21.1074161529541
+        Y: 14.218263626098633
+        Z: 9.861677169799805
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1347957849502563
+      Pitch: 1.449796438217163
       Target Frame: usn_drone/base_link
-      Yaw: 4.7498602867126465
+      Yaw: 4.799861907958984
     Saved: ~
 Window Geometry:
   Displays:
