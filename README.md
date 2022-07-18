@@ -4,9 +4,10 @@ This repository is the home to the source code for the USN SeaDrone simulation i
 
 
 
-## Getting Started
+## Startup
 
- * 123
+To begin the simulation, run the ```usn_drone_gazebo/launch/usn_drone.launch``` launch file:
+```roslaunch usn_drone_gazebo usn_drone.launch```
 
 
 
