@@ -9,7 +9,7 @@ from geometry_msgs.msg import Twist
 import actionlib
 from actionlib_msgs.msg import GoalID
 from usn_navigation.msg import LOSAction, LOSResult, LOSFeedback
-
+from visualize_path import VisualizePath
 #! action server for Line Of Sight Guidance between two points at a time, takes an array of points and iterates through them
 #! The current Linear Thrust control is very primitive and should probably be looked at for improvement.
 #! With current implementation there is a chance that the boat will surpass the target if the target is too close to the starting position.
@@ -22,6 +22,7 @@ class PDLineOfSight:
     _result = LOSResult
 
     def __init__(self):
+        self.VP = VisualizePath()
         #PD Gains and Filter Constants 
         self.Kp = rospy.get_param('LOS_Kp', 10)
         self.Kd = rospy.get_param('LOS_Kd', 1)
@@ -111,21 +112,24 @@ class PDLineOfSight:
         self.rate.sleep()
 
     def execute_cb(self, goal): #runs on each new action goal
+        wp = []
+        poses = goal.poses.poses
+
+        for i in range(1, len(poses)):
+            wp.append([poses[i].position.x, poses[i].position.y])
+
+        self.VP.set_start_and_stop([poses[0].position.x, poses[0].position.y],wp) #Visualize waypoints in rviz
+
         self.goal_active = True
         self._result.success = False
 
-        poses = goal.poses.poses
         feedback = LOSFeedback()
-        self.goal_proximity = 0.2
 
         for i in range(len(poses)-1):
             self.x_k, self.y_k = poses[i].position.x, poses[i].position.y
             self.x_k1, self.y_k1 = poses[i+1].position.x, poses[i+1].position.y
             rospy.loginfo('pursuing line from:[' + str(self.x_k) + ', ' + str(self.y_k) + '] to: [' + str(self.x_k1) + ', ' + str(self.y_k1) + ']' )
-
-            if i == len(poses)-2:
-                print('final goal')
-                self.goal_proximity = 0.2
+    
             while True:
                 if (self.distance_from_goal() > self.goal_proximity and self.goal_active):
                     #gets angles and distances
@@ -142,11 +146,6 @@ class PDLineOfSight:
 
                     self.twist_msg.linear.x = np.min([self.distance_from_goal() * 0.1, 1])
                     self.pub.publish(self.twist_msg)
-
-                    #publish error for live plotting 
-                    # msg = Float32()
-                    # msg.data = self.error        
-                    # self.pub_error.publish(msg)
 
                     feedback.distance = self.distance_from_goal()
                     self._as.publish_feedback(feedback)

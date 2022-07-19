@@ -13,6 +13,7 @@ def odom_cb(data):
     pose = PoseStamped()
     pose.header = data.header
     pose.pose = data.pose.pose
+    pose.pose.position.z = 0.2
     path.poses.append(pose)
     path_pub.publish(path)
     rospy.Rate(50).sleep()

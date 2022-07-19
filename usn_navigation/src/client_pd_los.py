@@ -69,7 +69,7 @@ pose.position.x, pose.position.y = 30, 0
 goal.poses.poses.append(pose)
 
 pose = Pose()
-pose.position.x, pose.position.y = 0, 0
+pose.position.x, pose.position.y = 10, 10
 goal.poses.poses.append(pose)
 
 
