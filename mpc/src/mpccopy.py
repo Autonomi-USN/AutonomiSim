@@ -47,18 +47,31 @@ from geometry_msgs.msg import Vector3Stamped
 from tf.transformations import euler_from_quaternion
 from robot_localization.srv import SetPose, SetPoseRequest, SetPoseResponse
 from nav_msgs.msg import Odometry
+import math
 
 
 
+def p4(p1, p2, p3):
+    x1, y1 = p1
+    x2, y2 = p2
+    if p1 == p2:
+        return 0, 0
+    x3, y3 = p3
+    dx, dy = x2-x1, y2-y1
+    det = dx*dx + dy*dy
+    a = (dy*(y3-y1)+dx*(x3-x1))/det
+    return x1+a*dx, y1+a*dy
 
 
-
-
-
+x_target, x_target_prev = 0, 0
+y_target, y_target_prev = 0, 0
+v_max, v_min = 28, 20
+yaw = 0
 
 def service_cb(request):
     global theta_target, DM2Arr, pub_r, pub_l, ultimate_x_target, ultimate_y_target, odom_init, odom, x_init, y_init, z_init, init_counter,latitude_ori, longitude_ori, altitude_ori, r_init, theta_init, u_init, v_init, mpc_iter, step_horizon, sim_time, state_init, state_target, obstacleFlag, args, state_init, state_target, n_states, n_controls, N, f, solver, nlp_prob, mpc_iter, u0, X0, t0, t, cat_states, cat_controls, cont_XP1, cont_XP2, times, x_init, y_init, theta_init, u_init, v_init, r_init, obstacleFlag, state_init, state_target, mpc_iter, movingTargetCounter, mpc_iter, ax, p, obstacle_axis, obstacle_clearance
     
+    x_target_prev, y_target_prev = 0, 0
     x_target = 0
     y_target = 0
     ultimate_x_target = x_target
@@ -177,7 +190,7 @@ def service_cb(request):
     U = ca.SX.sym('U', n_controls, N)
 
     # coloumn vector for storing initial state and target state
-    P = ca.SX.sym('P', n_states + n_states)
+    P = ca.SX.sym('P', n_states + N * (n_states + n_controls))
 
     # state weights matrix (Q_X, Q_Y, Q_THETA)
     Q = ca.diagcat(Q_x, Q_y, Q_theta, Q_u, Q_v, Q_r)
@@ -224,24 +237,29 @@ def service_cb(request):
     f = ca.Function('f', [states, controls], [RHS])
 
 
-    cost_fn = 0  # cost function
-    g = X[:, 0] - P[:n_states]  # constraints in the equation
+    obj = 0  # cost function
+    g = []
+    st = X[:, 0]
+    
+    g = ca.vertcat(g,st-P[0:n_states]) #initial condition constraints
+    for k in range(0,N):
+        st = X[:,k]
+        con = U[:,k]
+        ##### objective function
+        mtimes1 = ca.mtimes((st - P[(n_states+n_controls)*(k+1)-n_states:(n_states+n_controls)*(k+1)+0]).T,Q)
+        mtimes2 = ca.mtimes(mtimes1,(st - P[(n_states+n_controls)*(k+1)-n_states:(n_states+n_controls)*(k+1)+0]))
+        obj = obj + mtimes2
+        mtimes3 = ca.mtimes((con - P[(n_states+n_controls)*(k+1)+0:(n_states+n_controls)*(k+1)+n_controls]).T,R)
+        mtimes4 = ca.mtimes(mtimes3,(con - P[(n_states+n_controls)*(k+1)+0:(n_states+n_controls)*(k+1)+n_controls]))
+        obj = obj + mtimes4
+        #####
+        st_next = X[:,k+1] #next state vector
+        f_value = f(st,con) #calculates the state change
+        st_next_euler = st + (step_horizon*f_value) #forward euler method for iteration
+        g = ca.vertcat(g,st_next-st_next_euler) #compute constraints
 
 
-    # runge kutta
-    for k in range(N):
-        st = X[:, k]
-        con = U[:, k]
-        cost_fn = cost_fn \
-            + (st - P[n_states:]).T @ Q @ (st - P[n_states:]) \
-            + con.T @ R @ con
-        st_next = X[:, k+1]
-        k1 = f(st, con)
-        k2 = f(st + step_horizon/2*k1, con)
-        k3 = f(st + step_horizon/2*k2, con)
-        k4 = f(st + step_horizon * k3, con)
-        st_next_RK4 = st + (step_horizon / 6) * (k1 + 2 * k2 + 2 * k3 + k4)
-        g = ca.vertcat(g, st_next - st_next_RK4)
+
 
     OPT_variables = ca.vertcat(
         X.reshape((-1, 1)),   # Example: 3x11 ---> 33x1 where 3=states, 11=N+1
@@ -249,7 +267,7 @@ def service_cb(request):
     )
 
     nlp_prob = {
-        'f': cost_fn,
+        'f': obj,
         'x': OPT_variables,
         'g': g,
         'p': P
@@ -283,7 +301,11 @@ def service_cb(request):
     times = np.array([[0]])
 
 
+
+
+
     def shift_timestep(step_horizon, t0, state_init, u, f):
+        
         f_value = f(state_init, u[:, 0])
         next_state = ca.DM.full(state_init + (step_horizon * f_value))
 
@@ -301,13 +323,14 @@ def service_cb(request):
     pub_r = rospy.Publisher('/usn_drone/thrusters/right_thrust_cmd', Float32, queue_size = 10)
     pub_l = rospy.Publisher('/usn_drone/thrusters/left_thrust_cmd', Float32, queue_size = 10)
 
-
+    
     i = 0
     while True:
         #Check if target reached
 
         if isTargetReached():
             print('target reached')
+            x_target_prev, y_target_prev = x_target, y_target
             x_target, y_target = target_list_x[i], target_list_y[i]
             state_target = ca.DM([x_target, y_target, theta_target, u_target, v_target, r_target])
 
@@ -411,7 +434,8 @@ def chaseTarget():
         n_controls, N, f, solver, nlp_prob, mpc_iter, u0,\
         X0, t0, t, cat_states, cat_controls, cont_XP1,\
         cont_XP2, times, x_init, y_init, theta_init,\
-        u_init, v_init, r_init
+        u_init, v_init, r_init, x_target_prev, y_target_prev, x_target, y_target, v_max, v_min, yaw
+            
 
     t1 = time()
 
@@ -423,10 +447,32 @@ def chaseTarget():
     state_init[5,0] = r_init
     #print(state_init)
 
-    args['p'] = ca.vertcat(
-        state_init,    # current state
-        state_target   # target state
-    )
+    p = np.zeros(N*n_states + (N+1)*n_controls)
+    
+    psi_ref = ca.mod(math.atan2( (x_target-x_target_prev),(y_target-y_target_prev) ) + 2*pi, 2*pi)
+    v_x_ref = v_max*sin(psi_ref)
+    v_y_ref = v_max*cos(psi_ref)
+
+    current_trajectory_state_x, current_trajectory_state_y = p4([x_target_prev, y_target_prev], [x_target, y_target], [x_init, y_init])
+    x_ref0 = current_trajectory_state_x #cross-track
+    y_ref0 = current_trajectory_state_y #cross-track
+    x_ref_previous = x_ref0
+    y_ref_previous = y_ref0
+    r_ref = 0
+    
+
+    for k in range(0,N): #new - set the reference to track
+        t_predict = (k)*step_horizon # predicted time instant
+        x_ref = x_ref0 + v_x_ref*t_predict
+        y_ref = y_ref0 + v_y_ref*t_predict
+        x_ref_previous = x_ref
+        y_ref_previous = y_ref
+        p[(n_states+n_controls)*(k+1)-n_states:(n_states+n_controls)*(k+1)+0] = [x_ref, y_ref, psi_ref, 0, 0, 0]
+        p[(n_states+n_controls)*(k+1)+0:(n_states+n_controls)*(k+1)+n_controls] = [v_x_ref, v_y_ref]
+
+    p[0], p[1], p[2] = x_init, y_init, yaw
+    args['p'] = p
+
     print(state_target)
     # optimization variable current state
     # args['x0'] = ca.vertcat(
@@ -434,9 +480,11 @@ def chaseTarget():
     #     ca.reshape(u0, n_controls*N, 1)
     # )
 
-    args['x0'] = np.zeros(n_states*(N+1) + n_controls*N)
-    # print(args['p'])
-
+    #args['x0'] = np.zeros(n_states*(N+1) + n_controls*N) #!original
+    
+    args['x0'] = np.zeros(N*n_states*(N+1) * n_controls)
+    print(args['p'])
+    
     sol = solver(
         x0=args['x0'],
         lbx=args['lbx'],

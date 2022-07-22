@@ -30,6 +30,7 @@ class PDLineOfSight:
         self.T = 0.02
         self.Tf = 0.02
 
+
         #constants for setting the lookahead distance
         self.delta_max = 5
         self.delta_min = 0.1

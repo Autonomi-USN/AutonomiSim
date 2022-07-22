@@ -123,15 +123,15 @@
       <sensor name="camera" type="depth">
         <update_rate>20</update_rate>
         <camera>
-          <horizontal_fov>2.094396*2</horizontal_fov>
+          <horizontal_fov>1.91986</horizontal_fov>
           <image>
             <width>1920</width>
             <height>1080</height>
-            <format>R8G8B8</format>
+            <format>B8G8R8</format>
           </image>
           <clip>
             <near>0.05</near>
-            <far>3</far>
+            <far>30</far>
           </clip>
         </camera>
         <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
@@ -147,8 +147,8 @@
           <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
           <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
           <frameName>usn_drone/front_camera_link_optical</frameName>
-          <pointCloudCutoff>0.5</pointCloudCutoff>
-          <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+          <pointCloudCutoff>0.3</pointCloudCutoff>
+          <pointCloudCutoffMax>15</pointCloudCutoffMax>
           <distortionK1>0</distortionK1>
           <distortionK2>0</distortionK2>
           <distortionK3>0</distortionK3>

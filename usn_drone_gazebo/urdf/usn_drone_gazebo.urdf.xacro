@@ -164,8 +164,8 @@
 
       <!-- <xacro:usn_drone_camera name="front_right_camera" y="-0.1" x="0.75" P="${radians(15)}" /> -->
 
-      <!-- Add a camera facing right >
-      <xacro:usn_drone_camera name="middle_right_camera" y="-0.45" P="${radians(15)}" Y="${radians(-90)}" post_Y="${radians(-90)}" /-->
+      <!-- <Add a camera facing right > -->
+      <xacro:wamv_camera name="front_camera_color" y="0.065" x="0.175" z="0.225" P="${radians(15)}" />
 
       <!-- Add simulated GPS -->
       <xacro:usn_drone_gps name="gps_usn_drone" x="0.05" z="0.0" />

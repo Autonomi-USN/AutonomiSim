@@ -14,6 +14,7 @@
        <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/lidar.xacro" />
        <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_p3d.xacro" />
        <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_pinger.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/wamv_camera.xacro" />
 
        <!-- Include ball shooter macros -->
        <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/ball_shooter.xacro" />
