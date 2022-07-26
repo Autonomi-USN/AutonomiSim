@@ -1,6 +1,6 @@
 <launch>
 <!-- Convert xacro and put on parameter server -->
-<param name="robot_description" command="$(find xacro)/xacro '$(find usn_drone)/urdf/usn_drone.urdf.xacro' "/>
+<param name="usndrone2robot_description" command="$(find xacro)/xacro '$(find usn_drone_description)/urdf/usn_drone.urdf' "/>
 <!-- Spawn a robot into Gazebo -->
 <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model robot" />
 </launch>

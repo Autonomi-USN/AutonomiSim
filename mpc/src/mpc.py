@@ -466,12 +466,12 @@ def chaseTarget():
 
     #Scaling control to 1 to -1
     if cont_XP1 < 0 :
-        cont_XP1 = DM2Arr(u[0, 0])/20
+        cont_XP1 = DM2Arr(u[0, 0])/28.449
     else :
         cont_XP1 = DM2Arr(u[0, 0])/28.449
 
     if cont_XP2 < 0 :
-        cont_XP2 = DM2Arr(u[1, 0])/20
+        cont_XP2 = DM2Arr(u[1, 0])/28.449
     else :
         cont_XP2 = DM2Arr(u[1, 0])/28.449
 

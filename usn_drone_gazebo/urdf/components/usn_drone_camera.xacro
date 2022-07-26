@@ -135,10 +135,8 @@
           </clip>
         </camera>
         <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
-          <baseline>0.2</baseline>
+          <baseline>0.12</baseline>
           <alwaysOn>true</alwaysOn>
-          <!-- Keep this zero, update_rate in the parent <sensor> tag
-            will control the frame rate. -->
           <updateRate>0.0</updateRate>
           <cameraName>camera_ir</cameraName>
           <imageTopicName>/camera/color/image_raw</imageTopicName>
@@ -157,7 +155,7 @@
           <CxPrime>0</CxPrime>
           <Cx>0</Cx>
           <Cy>0</Cy>
-          <focalLength>0</focalLength>
+          <focalLength>0.212</focalLength>
           <hackBaseline>0</hackBaseline>
         </plugin>
       </sensor>

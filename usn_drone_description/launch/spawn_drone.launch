@@ -8,7 +8,7 @@
     name="spawn_model"
     pkg="gazebo_ros"
     type="spawn_model"
-    args="-file $(find usn_drone)/urdf/usn_drone.urdf -urdf -model usn_drone"
+    args="-file /home/ros/vrx_ws/src/vrx/usn_drone_description/urdf/usn_drone.urdf -urdf -model boat2"
     output="screen" />
   <node
     name="fake_joint_calibration"

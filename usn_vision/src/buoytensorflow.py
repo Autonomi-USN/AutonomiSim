@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 #########################################################################################################
 #                                                                                                       #
 #   This script detects buoys with the help of a tensorflow model. Draws the detections on a image      #
@@ -199,10 +201,10 @@ def zed_camera(msg):
     boxes               = detections['detection_boxes']
     max_boxes_to_draw   = boxes.shape[0]
     scores              = detections['detection_scores']
-    min_score_thresh    =.8
+    min_score_thresh    =.95
 
     if(publish_detection_image==True):
-        rgbimg = ros_numpy.numpify(msg) 
+        rgbimg = ros_numpy.numpify(msg)
     
     teller=0  
     Green                    =  False                                                                                    #Variable to keep track of what buoyes are visible
@@ -222,8 +224,8 @@ def zed_camera(msg):
             topleft                  =  (int(iteminfo[1]),int(iteminfo[3]))
             bottomright              =  (int(iteminfo[2]),int(iteminfo[4]))
             depth                    =  float(cv_depth[iteminfo[6],iteminfo[5]]*100.0)
-            print(depth)
             n = 0 
+            
             if(math.isnan(depth) or math.isinf(depth)):                                                                 #If the depth is not a number or infinite, check nearby pixels for depth data
                 while((math.isnan(depth) and n < 10) or (math.isinf(depth) and n < 10)):
                     n = n + 1 
@@ -235,6 +237,7 @@ def zed_camera(msg):
                 depth = 0 
                 colormsg.visible = False
             colormsg.length          =  depth + 0.55/2
+            #print(colormsg.length)
             ang_x                    =  round(np.degrees(math.atan(((iteminfo[5]-(1920/2))*2*10**-4)/focallength)),6)             #Calculating the angle in x direction
             colormsg.angle           =  ang_x
             ang_y                    =  round((np.degrees(math.atan(((iteminfo[6]-(1080/2))*2*10**-4)/focallength)))*-1,6)       #Calculating the angle in y direction
@@ -242,7 +245,7 @@ def zed_camera(msg):
             colormsg.yc              =  depth*(math.sin(np.radians(ang_y)))                                             #Distance from camera in y direction
             colormsg.z               =  depth*(math.cos(np.radians(abs(ang_x))))                                        #Distance from camera in z direction                                                                        #Radius of the buoy
             Length_m                 =  round((depth/100) +0.55/2,3)                                                              #Length in meters
-           # print("detected:",iteminfo[0],"Score:",round(scores[i]*100,2),"%")
+            print("detected:",iteminfo[0],"Score:",round(scores[i]*100,2),"%")
 
             Tot_Angle                =  round(ang_x+DIR,3)                              #Total angle used for vinc function
 
@@ -286,6 +289,7 @@ def zed_camera(msg):
     
     #Only publishes the detection image if wanted/needed.(to save cpu and memory)
     if(publish_detection_image==True):
+        
         drawnimage = ros_numpy.msgify(Image, rgbimg,encoding='bgr8')
         img_detections.publish(drawnimage)
 

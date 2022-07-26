@@ -34,7 +34,7 @@ class PDLineOfSight:
         #constants for setting the lookahead distance
         self.delta_max = 5
         self.delta_min = 0.1
-        self.delta = 3
+        #self.delta = 3
         self.gamma = 0.15
         self.goal_proximity = 1
 
@@ -150,6 +150,7 @@ class PDLineOfSight:
 
                     feedback.distance = self.distance_from_goal()
                     self._as.publish_feedback(feedback)
+                    print(self.twist_msg)
                 else:
                     break
         

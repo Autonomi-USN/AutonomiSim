@@ -25,14 +25,14 @@
     <visual>
       <origin rpy="1.5707963267949 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://usn_drone/meshes/usn_drone.STL"/>
+        <mesh filename="package://usn_drone_description/meshes/usn_drone.STL"/>
       </geometry>
       <material name="blue"/>
     </visual>
     <collision>
       <origin rpy="1.5707963267949 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://usn_drone/meshes/usn_drone.STL"/>
+        <mesh filename="package://usn_drone_description/meshes/usn_drone.STL"/>
       </geometry>
     </collision>
   </link>

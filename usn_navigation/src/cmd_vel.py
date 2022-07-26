@@ -22,6 +22,11 @@ class Node():
     def callback(self,data):
         linfac = self.linear_scaling
         angfac = self.angular_scaling
+
+        # if data.linear.x > 1:
+        #     data.linear.x = 1
+        # elif data.linear.x < -1:
+        #     data.linear.x = 1
         
         self.driveMsgRight.data = linfac*data.linear.x - angfac*data.angular.z
         self.driveMsgLeft.data = linfac*data.linear.x + angfac*data.angular.z

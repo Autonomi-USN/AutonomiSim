@@ -65,18 +65,11 @@ def p4(p1, p2, p3):
 
 x_target, x_target_prev = 0, 0
 y_target, y_target_prev = 0, 0
-v_max, v_min = 28, 20
-yaw = 0
+v_max, v_min = 28.449, -20
+#yaw = 0
 
 def service_cb(request):
-    global theta_target, DM2Arr, pub_r, pub_l, ultimate_x_target, ultimate_y_target, odom_init, odom, x_init, y_init, z_init, init_counter,latitude_ori, longitude_ori, altitude_ori, r_init, theta_init, u_init, v_init, mpc_iter, step_horizon, sim_time, state_init, state_target, obstacleFlag, args, state_init, state_target, n_states, n_controls, N, f, solver, nlp_prob, mpc_iter, u0, X0, t0, t, cat_states, cat_controls, cont_XP1, cont_XP2, times, x_init, y_init, theta_init, u_init, v_init, r_init, obstacleFlag, state_init, state_target, mpc_iter, movingTargetCounter, mpc_iter, ax, p, obstacle_axis, obstacle_clearance
-    
-    x_target_prev, y_target_prev = 0, 0
-    x_target = 0
-    y_target = 0
-    ultimate_x_target = x_target
-    ultimate_y_target = y_target
-
+    global theta_target, DM2Arr, pub_r, pub_l, odom_init, odom, x_init, y_init, z_init, init_counter,latitude_ori, longitude_ori, altitude_ori, r_init, theta_init, u_init, v_init, mpc_iter, step_horizon, sim_time, state_init, state_target, obstacleFlag, args, state_init, state_target, n_states, n_controls, N, f, solver, nlp_prob, mpc_iter, u0, X0, t0, t, cat_states, cat_controls, cont_XP1, cont_XP2, times, x_init, y_init, theta_init, u_init, v_init, r_init, obstacleFlag, state_init, state_target, mpc_iter, movingTargetCounter, mpc_iter, ax, p, obstacle_axis, obstacle_clearance
 
     target_list_x = [5, 10, 15, 20, 25, 30, 35]
     target_list_y = [20,  0, 20,  0, 20, 0, 20]
@@ -300,23 +293,6 @@ def service_cb(request):
     cont_XP2 = DM2Arr(u0[1, 0])
     times = np.array([[0]])
 
-
-
-
-
-    def shift_timestep(step_horizon, t0, state_init, u, f):
-        
-        f_value = f(state_init, u[:, 0])
-        next_state = ca.DM.full(state_init + (step_horizon * f_value))
-
-        t0 = t0 + step_horizon
-        u0 = ca.horzcat(
-            u[:, 1:],
-            ca.reshape(u[:, -1], -1, 1)
-        )
-
-        return t0, next_state, u0
-
     rospy.Subscriber("/usn_drone/sensors/gps/gps/fix", NavSatFix, gpsCallback)
     rospy.Subscriber("/usn_drone/sensors/imu/imu/data", Imu, imuCallback)
     rospy.Subscriber("/usn_drone/sensors/gps/gps/fix_velocity", Vector3Stamped, fixVelCallback)
@@ -339,12 +315,6 @@ def service_cb(request):
             if i == (len(target_list_x) - 1):
                 break
 
-
-        #if isObstacleDetected():
-        #    if isObstacleStationary():
-        #        updateTarget()
-        #    else:
-        #        updateMovingTarget(0,0,0)
         chaseTarget()
     
     ################################### Plotting ##################################
@@ -358,13 +328,10 @@ def service_cb(request):
 
     #Plot
     ax.plot(0,0, 'o', color='k')
-    ax.plot(ultimate_x_target, ultimate_y_target, 'o', color='r')
+    ax.plot(x_target, y_target, 'o', color='r')
     plt.show()
     #plt.cla()
     return SetPoseResponse()
-
-def odomCallback(data): #this will update the current location and check for success
-    global odom_init, odom
 
 
 def gpsCallback(data):
@@ -410,20 +377,17 @@ def fixVelCallback(data):
 
 def isTargetReached():
     global mpc_iter, step_horizon, sim_time, state_init,\
-        state_target, obstacleFlag, ultimate_y_target, ultimate_x_target, theta_target
+        state_target, obstacleFlag, theta_target
 
     if (mpc_iter * step_horizon > sim_time):
         return True
 
-    print(ca.norm_2(state_init[0:3] - ca.DM([ultimate_x_target, \
-        ultimate_y_target, theta_target])))
+    print(ca.norm_2(state_init[0:3] - ca.DM([x_target, \
+        y_target, theta_target])))
     print(state_target[0], state_target[1])
 
     if (ca.norm_2(state_init[0:2] - state_target[0:2]) < 1):
-        # if obstacleFlag:
-        #     obstacleFlag = False
-        # state_target[0] = ultimate_x_target
-        # state_target[1] = ultimate_y_target
+
         if (ca.norm_2(state_init[2] - state_target[2]) < 0.2):
             return True
 
@@ -467,8 +431,8 @@ def chaseTarget():
         y_ref = y_ref0 + v_y_ref*t_predict
         x_ref_previous = x_ref
         y_ref_previous = y_ref
-        p[(n_states+n_controls)*(k+1)-n_states:(n_states+n_controls)*(k+1)+0] = [x_ref, y_ref, psi_ref, 0, 0, 0]
-        p[(n_states+n_controls)*(k+1)+0:(n_states+n_controls)*(k+1)+n_controls] = [v_x_ref, v_y_ref]
+        p[(n_states+n_controls)*(k+1)-n_states:(n_states+n_controls)*(k+1)+0] = [x_ref, y_ref, psi_ref, 28, 0, r_ref] #check if 28*2 because two motors
+        p[(n_states+n_controls)*(k+1)+0:(n_states+n_controls)*(k+1)+n_controls] = [28, 28]
 
     p[0], p[1], p[2] = x_init, y_init, yaw
     args['p'] = p
@@ -531,11 +495,6 @@ def chaseTarget():
         pub_l.publish(cont_XP2)
 
 
-    # print(DM2Arr(X0)[0,0], DM2Arr(X0)[1,0], DM2Arr(X0)[2,0])
-    # cont_XP1 =
-    # cont_XP1 = np.vstack((cont_XP1,DM2Arr(u[0, 0])))
-    # cont_XP2 = np.vstack((cont_XP2,DM2Arr(u[1, 0])))
-
     t = np.vstack((
         t,
         t0
@@ -561,46 +520,6 @@ def chaseTarget():
 
     mpc_iter = mpc_iter + 1
 
-def isObstacleDetected():
-    global obstacleFlag, state_init, state_target
-
-    #External code to detec next obstacle
-
-    return obstacleFlag
-
-def isObstacleStationary():
-    return True
-
-def updateTarget():
-    global state_target
-
-    state_target[0] = obstacle_axis[0] + obstacle_clearance
-    state_target[1] = obstacle_axis[1] - 3
-    # state_target[0,2] = 100
-
-def updateMovingTarget(heading, velocity, location,):
-    global state_target, mpc_iter, movingTargetCounter, mpc_iter
-
-    if mpc_iter%33 == 0:
-        if movingTargetCounter < 2:
-            movingTargetCounter = movingTargetCounter + 1
-    if isObstacleOnRight():
-        state_target[0] = obstacle_moving_trajectory[movingTargetCounter][0]
-        state_target[1] = obstacle_moving_trajectory[movingTargetCounter][1]
-    else:
-        state_target[0] = ultimate_x_target
-        state_target[1] = ultimate_y_target
-
-#Input will come from visual sensors
-#Dummy values used now.
-#Input : None
-def isObstacleOnRight():
-    global mpc_iter
-
-    if mpc_iter < 30:
-        return True
-    else :
-        False
 
 #Draws obstacle is grap
 #Input : trajectory in array
@@ -613,9 +532,6 @@ def drawObstacle(trajectory):
                        ,color='r', alpha=1, fill=False)
         ax.add_artist(p)
 
-    # ax.plot(trajectory[0][0], trajectory[0][1], 'o', color='r')
-    # p = plt.Circle((trajectory[3][0] , trajectory[3][1] ), obstacle_clearance
-    #                ,color='r', fill=False)
     ax.add_artist(p)
 
 
