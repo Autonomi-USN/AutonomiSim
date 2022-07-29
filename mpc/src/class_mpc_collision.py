@@ -57,7 +57,6 @@ class mpc:
 
         self.step_horizon = 0.5  # time between steps in seconds?? 0.1 Try diefferent step size.
         self.N = 40               # number of look ahead steps?? May increase to 2 sec horizon
-        self.sim_time = 4000      # simulation time
         self.max_u = 2.8
         self.max_fwd_F = 28 #max forward thrust
         self.max_bwd_F = -20 #max backward thrust
@@ -65,9 +64,6 @@ class mpc:
         self.latitude_ori = 0
         self.longitude_ori = 0
         self.altitude_ori = 0
-
-        self.target_list_x = [50]   #!delete later
-        self.target_list_y = [10]   #!----------!#
 
         self.ultimate_target_x = 50
         self.ultimate_target_y = 0
@@ -109,22 +105,21 @@ class mpc:
 
     def fixVelCallback(self, data):
         self.u = data.twist.twist.linear.x
-        self.v = -data.twist.twist.linear.y
-        
+        self.v = -data.twist.twist.linear.y   
     
     def get_solver(self):
         T = self.step_horizon
         N = self.N
 
-        Q_x = 500
-        Q_y = 500
-        Q_theta = 100
-        Q_u = 1
-        Q_v = 0
-        Q_r = 0
+        Q_x = 1
+        Q_y = 1
+        Q_theta = 0 #must be zero now that we are using a least-squares cost function
+        Q_u = 0 #must be zero now that we are using a least-squares cost function
+        Q_v = 0 #must be zero now that we are using a least-squares cost function
+        Q_r = 0 #must be zero now that we are using a least-squares cost function
 
-        R1 = 1
-        R2 = 1
+        R1 = 0 #must be zero now that we are using a least-squares cost function
+        R2 = 0 #must be zero now that we are using a least-squares cost function
 
         m = 18      #Mass of USV
         Iz = 50      #Value did not find in code gussed and set value
@@ -177,15 +172,7 @@ class mpc:
 
         # controls weights matrix
         R = ca.diagcat(R1, R2)
-
-
-        # RHS = ca.vertcat(u*cos(theta),\
-        #                 u*sin(theta),\
-        #                 r,\
-        #                 ((XP1+XP2)/20),\
-        #                 0,\
-        #                 ((XP1-XP2)/177))
-        #!proper model
+        
         RHS = ca.vertcat(u*cos(theta) -v*sin(theta),\
                         u*sin(theta)+ v*cos(theta),\
                         r,\
@@ -196,35 +183,25 @@ class mpc:
         # maps controls from [va, vb, vc, vd].T to [vx, vy, omega].T
         f = ca.Function('f', [states, controls], [RHS])
 
-
         obj = 0  # cost function
         g = []
         st = X[:, 0]
-
-
-
-
         
         g = ca.vertcat(g,st-P[0:n_states]) #initial condition constraints
         for k in range(0,N):
             st = X[:,k]
             con = U[:,k]
-            
             mtimes1 = ca.mtimes((st - P[(n_states+n_controls)*(k+1):(n_states+n_controls)*(k+1)+n_states]).T,Q)
             mtimes2 = ca.mtimes(mtimes1,(st - P[(n_states+n_controls)*(k+1):(n_states+n_controls)*(k+1)+n_states]))
             obj = obj + mtimes2
             mtimes3 = ca.mtimes((con - P[(n_states+n_controls)*(0+1)-n_controls:(n_states+n_controls)*(0+1)]).T,R)
             mtimes4 = ca.mtimes(mtimes3,(con - P[(n_states+n_controls)*(0+1)-n_controls:(n_states+n_controls)*(0+1)]))
             obj = obj + mtimes4
-
             #####
             st_next = X[:,k+1] #next state vector
             f_value = f(st,con) #calculates the state change
             st_next_euler = st + (T*f_value) #forward euler method for iteration
             g = ca.vertcat(g,st_next-st_next_euler) #compute constraints
-
-
-
 
         OPT_variables = ca.vertcat(
             X.reshape((n_states*(N+1), 1)),   # Example: 3x11 ---> 33x1 where 3=states, 11=N+1
@@ -252,21 +229,22 @@ class mpc:
         return solver
 
 
-    def optimize(self, x_init, y_init, yaw_init, u_init, v_init, r_init, x_target, y_target, x_target_prev, y_target_prev):
+    def optimize(self, x_init, y_init, yaw_init, u_init, v_init, r_init, x_target, y_target, v_x_target, y_x_target):
         
-        #convert to model frame, see paper
+        #convert from ROS frames (ENU for world and x-front y-left z-up for body) to model frame (NED for world and x-front y-right z-down), see paper
         y_init_temp = y_init
         y_init = x_init
         x_init = y_init_temp
         yaw_init = pi/2 - yaw_init
         r_init = -r_init
+        
+        v_y_target_temp = v_y_target
+        v_y_target = v_x_target
+        v_x_target = v_y_target_temp
 
         y_target_temp = y_target
         y_target = x_target
         x_target = y_target_temp
-        y_target_prev_temp = y_target_prev
-        y_target_prev = x_target_prev
-        x_target_prev = y_target_prev_temp
 
         print('target: ', x_target, y_target)
         print('position: ', x_init, y_init)
@@ -301,27 +279,15 @@ class mpc:
             'ubx': ubx
         }
         
-        p = np.zeros((N+1)*n_states + N*n_controls)
-        
-
-        #!new coordinates
-        psi_ref = ca.mod(math.atan2( (y_target-y_target_prev),(x_target-x_target_prev) ) + 2*pi, 2*pi)
-        v_x_ref = self.max_u*cos(psi_ref)
-        v_y_ref = self.max_u*sin(psi_ref)
-
-
-        current_trajectory_state_x, current_trajectory_state_y = self.p4([x_target_prev, y_target_prev], [x_target, y_target], [x_init, y_init])
-        x_ref0 = current_trajectory_state_x #cross-track
-        y_ref0 = current_trajectory_state_y #cross-track
-        
+        p = np.zeros((N+1)*n_states + N*n_controls)    
 
         for k in range(0,N+1): #new - set the reference to track
             t_predict = (k)*T # predicted time instant
-            x_ref = x_ref0 + v_x_ref*t_predict
-            y_ref = y_ref0 + v_y_ref*t_predict            
-            p[(n_states+n_controls)*(k):(n_states+n_controls)*k + n_states] = [x_ref, y_ref, psi_ref, self.max_u, 0, 0] #check if 28*2 because two motors
+            x_ref = x_target + v_x_target*t_predict
+            y_ref = y_target + v_y_target*t_predict            
+            p[(n_states+n_controls)*(k):(n_states+n_controls)*k + n_states] = [x_ref, y_ref, 0, 0, 0, 0] #check if 28*2 because two motors
             if k != N:
-                p[(n_states+n_controls)*(k)+n_states:(n_states+n_controls)*(k) + n_states + n_controls] = [self.max_fwd_F, self.max_bwd_F]
+                p[(n_states+n_controls)*(k)+n_states:(n_states+n_controls)*(k) + n_states + n_controls] = [0, 0]
 
         p[0], p[1], p[2], p[3], p[4], p[5] = x_init, y_init, yaw_init, self.u, self.v, r_init
         args['p'] = p
@@ -386,8 +352,9 @@ class mpc:
                 if self.isTargetReached(x_target, y_target):
                     print('reached goal')
                     break
-
-                cont_XP1, cont_XP2 = self.optimize(self.x_init, self.y_init, self.yaw, self.u, self.v, self.r, x_target, y_target, x_target_prev, y_target_prev)
+                v_x_target, v_y_target = 0, 0
+                
+                cont_XP1, cont_XP2 = self.optimize(self.x_init, self.y_init, self.yaw, self.u, self.v, self.r, x_target, y_target, v_x_target, v_y_target)
                 
                 #Scaling control to 1 to -1
                 if cont_XP1 < 0 :
