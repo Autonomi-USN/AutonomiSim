@@ -43,11 +43,10 @@ class MovingBoat:
 
 if __name__ == '__main__':
     rospy.init_node("moving_boats")
-    boat1 = MovingBoat('boat1', [40, -15, 0.25], [40, 15, 0.25], [0, 0, 0.707, 0.707], 100)
-    boat2 = MovingBoat('boat2', [50, 15, 0.25], [26, 0, 0.22], [0, 0, -0.8, 0.6], 100)
+    wamv = MovingBoat('wamv', [40, -20, 0.25], [40, 40, 0.25], [0, 0, 0.707, 0.707], 1500)
+    #boat2 = MovingBoat('boat2', [50, 15, 0.25], [26, 0, 0.22], [0, 0, -0.8, 0.6], 100)
 
     while not rospy.is_shutdown():
         for i in range(2):
-            boat1.move_boat()
-            boat2.move_boat()
+            wamv.move_boat()
 

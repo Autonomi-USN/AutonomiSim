@@ -308,10 +308,10 @@ for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 # Load saved tensorflow model and build the detection function
 #detect_fn = tf.saved_model.load('/home/autodrone/TF-TRT/Models/TensorflowModels/50000steps/converted') #Directory of the converted model.
-detect_fn = tf.saved_model.load('/home/ros/TF-TRT/Models/TensorflowModels/ssd-mobilenet-v2/saved_model') #Directory of the converted model
+detect_fn = tf.saved_model.load('/home/ros/TF-TRT/Models/TensorflowModels/ssd-mobilenet-v2-640/saved_model') #Directory of the converted model
 
 #Subscribers and publishers
-zed2i               = rospy.Subscriber('/camera/color/image_raw', Image, zed_camera)
+zed2i               = rospy.Subscriber('rgb_camera/image_color_raw', Image, zed_camera)
 zed2i_depth         = rospy.Subscriber('camera/depth/image_raw',Image, depth_zed2i)
 if(publish_detection_image==True):
     img_detections  = rospy.Publisher('buoy_image',Image,queue_size=1)

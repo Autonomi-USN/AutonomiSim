@@ -19,9 +19,9 @@
   <arg name="pinger_params" default="$(find vrx_gazebo)/config/pinger.yaml" />
 
   <!-- Initial USV location and attitude-->
-  <arg name="x" default="20" />
+  <arg name="x" default="0" />
   <arg name="y" default="0" />
-  <arg name="z" default="0" />
+  <arg name="z" default="0.25" />
   <arg name="P" default="0" />
   <arg name="R" default="0" />
   <arg name="Y" default="0" />

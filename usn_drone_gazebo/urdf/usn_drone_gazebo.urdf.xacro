@@ -169,7 +169,7 @@
      
      
      
-      <!-- <Add a camera facing right > -->
+      <!-- <Add an rgb camera > -->
       <!--xacro:wamv_camera name="front_camera_color" y="0.065" x="0.175" z="0.225" P="${radians(15)}" /-->
 
       

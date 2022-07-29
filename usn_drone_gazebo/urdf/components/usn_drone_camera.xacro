@@ -155,11 +155,44 @@
           <CxPrime>0</CxPrime>
           <Cx>0</Cx>
           <Cy>0</Cy>
-          <focalLength>0.212</focalLength>
+          <focalLength>672.200794</focalLength>
           <hackBaseline>0</hackBaseline>
         </plugin>
+
       </sensor>
-    </gazebo>
+      
+      <sensor name="camera" type="camera">
+        <update_rate>20</update_rate>
+        <camera>
+          <horizontal_fov>1.91986</horizontal_fov>
+          <image>
+            <width>1920</width>
+            <height>1080</height>
+            <format>B8G8R8</format>
+          </image>
+          <!-- <clip>
+            <near>0.05</near>
+            <far>30</far>
+          </clip> -->
+        </camera>
+        
+        <plugin name="camera_plugin_rgb" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate>
+          <cameraName>rgb_camera</cameraName>
+          <imageTopicName>image_color_raw</imageTopicName>
+          <cameraInfoTopicName>rgb_camera_info</cameraInfoTopicName>
+          <frameName>usn_drone/front_camera_link_optical</frameName>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
+        </plugin>
+        
+    </sensor>
+  </gazebo>
 
     <!-- Set color of post -->
     <gazebo reference="${namespace}/${name}_post_link">
