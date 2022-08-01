@@ -41,6 +41,7 @@ from geometry_msgs.msg import Vector3Stamped
 from tf.transformations import euler_from_quaternion
 import math
 from nav_msgs.msg import Odometry
+from gazebo_msgs.msg import ModelState
 
 
 class mpc:
@@ -73,8 +74,7 @@ class mpc:
         self.tic = 0
 
     def foreignBoatPosCb(self, data):
-        if data.model_name == "collision_boat":
-            self.foreign_boat_pos = [data.pose.position.x, data.pose.position.y]
+        self.foreign_boat_pos = [data.pose.position.x, data.pose.position.y]
 
 
     def gpsCallback(self, data):
@@ -229,7 +229,31 @@ class mpc:
         return solver
 
 
-    def optimize(self, x_init, y_init, yaw_init, u_init, v_init, r_init, x_target, y_target, v_x_target, y_x_target):
+    def isright(self, sourceAngle, otherAngle):
+        # sourceAngle and otherAngle should be in the range -180 to 180
+        sourceAngle = sourceAngle - 180
+        otherAngle = otherAngle - 180
+        difference = otherAngle - sourceAngle
+        if (difference < -180.0):
+            difference += 360.0
+        if (difference > 180.0):
+            difference -= 360.0
+        if (difference > 0.0):
+            return 1
+        if (difference < 0.0):
+            return
+        return
+
+    def calculate_bearing(self, pointA, pointB):
+        diff_y = (pointB[1]-pointA[1])
+        diff_x = (pointB[0]-pointA[0])
+        bearing = math.atan2(diff_x, diff_y)
+        initial_bearing = math.degrees(bearing)
+        final_bearing = (initial_bearing + 360) % 360
+        return final_bearing
+
+
+    def optimize(self, x_init, y_init, yaw_init, u_init, v_init, r_init, x_target, y_target, v_x_target, v_y_target):
         
         #convert from ROS frames (ENU for world and x-front y-left z-up for body) to model frame (NED for world and x-front y-right z-down), see paper
         y_init_temp = y_init
@@ -246,8 +270,8 @@ class mpc:
         y_target = x_target
         x_target = y_target_temp
 
-        print('target: ', x_target, y_target)
-        print('position: ', x_init, y_init)
+
+        print(y_target, x_target)
 
         n_states = 6
         n_controls = 2
@@ -283,8 +307,8 @@ class mpc:
 
         for k in range(0,N+1): #new - set the reference to track
             t_predict = (k)*T # predicted time instant
-            x_ref = x_target + v_x_target*t_predict
-            y_ref = y_target + v_y_target*t_predict            
+            x_ref = x_target #+ v_x_target*t_predict
+            y_ref = y_target #+ v_y_target*t_predict            
             p[(n_states+n_controls)*(k):(n_states+n_controls)*k + n_states] = [x_ref, y_ref, 0, 0, 0, 0] #check if 28*2 because two motors
             if k != N:
                 p[(n_states+n_controls)*(k)+n_states:(n_states+n_controls)*(k) + n_states + n_controls] = [0, 0]
@@ -307,8 +331,6 @@ class mpc:
         X0 = ca.reshape(sol['x'][: n_states * (N+1)], n_states, N+1)
         cont_XP1 = self.DM2Arr(u[0, 0])
         cont_XP2 = self.DM2Arr(u[1, 0])
-        
-        print(psi_ref)
         return cont_XP1, cont_XP2
 
     def DM2Arr(self,dm):
@@ -338,39 +360,46 @@ class mpc:
 
 
     def run(self):
-        x_target, y_target = 0, 0
-        for x, y in zip(self.target_list_x, self.target_list_y):
-            x_target_prev, y_target_prev = x_target, y_target
-            x_target, y_target = x, y
+
+        rospy.wait_for_message('/gazebo/set_model_state', ModelState)
+        x_ultimate_target, y_ultimate_target = 50, 0
+        while True and not rospy.is_shutdown(): 
+            """
+            use functions to determine whether foreign boat is on left or right of our trajectory
+            if its on the right, set the target to be behind the boat, else, keep the target on the ultimate goal
+            """
+            drone_to_dest = self.calculate_bearing([self.x_init, self.y_init], [x_ultimate_target, y_ultimate_target]) #angle between seadrone and target
+            drone_to_foreign_boat = self.calculate_bearing([self.x_init, self.y_init], self.foreign_boat_pos)
+            
+            if self.isright(drone_to_dest, drone_to_foreign_boat):
+                x_target, y_target = self.foreign_boat_pos[0], self.foreign_boat_pos[1]
+            else:
+                x_target, y_target = x_ultimate_target, y_ultimate_target
+
+
+
+            if self.isTargetReached(x_ultimate_target, y_ultimate_target):
+                print('reached goal')
+                break
 
             
-            while True:
-                self.tic = time()
+            cont_XP1, cont_XP2 = self.optimize(self.x_init, self.y_init, self.yaw, self.u, self.v, self.r, x_target, y_target-3, 0, 2)
+            
+            #Scaling control to 1 to -1
+            if cont_XP1 < 0 :
+                cont_XP1 = cont_XP1/np.abs(self.max_bwd_F)
+            else :
+                cont_XP1 = cont_XP1/self.max_fwd_F
+            if cont_XP2 < 0 :
+                cont_XP2 = cont_XP2/np.abs(self.max_bwd_F)
+            else :
+                cont_XP2 = cont_XP2/self.max_fwd_F
+            
+            self.pub_left_thrust.publish(cont_XP1)
+            self.pub_right_thrust.publish(cont_XP2)
 
-                if rospy.is_shutdown():
-                    break
-                if self.isTargetReached(x_target, y_target):
-                    print('reached goal')
-                    break
-                v_x_target, v_y_target = 0, 0
-                
-                cont_XP1, cont_XP2 = self.optimize(self.x_init, self.y_init, self.yaw, self.u, self.v, self.r, x_target, y_target, v_x_target, v_y_target)
-                
-                #Scaling control to 1 to -1
-                if cont_XP1 < 0 :
-                    cont_XP1 = cont_XP1/np.abs(self.max_bwd_F)
-                else :
-                    cont_XP1 = cont_XP1/self.max_fwd_F
 
-                if cont_XP2 < 0 :
-                    cont_XP2 = cont_XP2/np.abs(self.max_bwd_F)
-                else :
-                    cont_XP2 = cont_XP2/self.max_fwd_F
-                
-                self.pub_left_thrust.publish(cont_XP1)
-                self.pub_right_thrust.publish(cont_XP2)
 
-        
 if __name__ == "__main__":
     rospy.init_node('mpc')
     mpc = mpc()
