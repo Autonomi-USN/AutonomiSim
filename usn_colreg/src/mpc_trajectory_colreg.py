@@ -112,13 +112,13 @@ class mpc:
 
         Q_x = 1
         Q_y = 1
-        Q_theta = 0 #must be zero now that we are using a least-squares cost function
-        Q_u = 0 #must be zero now that we are using a least-squares cost function
-        Q_v = 0 #must be zero now that we are using a least-squares cost function
-        Q_r = 0 #must be zero now that we are using a least-squares cost function
+        Q_theta = 0.5 
+        Q_u = 0.5 
+        Q_v = 0 
+        Q_r = 0 
 
-        R1 = 0 #must be zero now that we are using a least-squares cost function
-        R2 = 0 #must be zero now that we are using a least-squares cost function
+        R1 = 0 
+        R2 = 0 
 
         m = 18      #Mass of USV
         Iz = 50      #Value did not find in code gussed and set value
@@ -252,7 +252,7 @@ class mpc:
         return final_bearing
 
 
-    def optimize(self, x_init, y_init, yaw_init, u_init, v_init, r_init, x_target, y_target, v_x_target, v_y_target):
+    def optimize(self, x_init, y_init, yaw_init, u_init, v_init, r_init, x_target, y_target, v_x_target, v_y_target, trajectory_tracking):
         
         #convert from ROS frames (ENU for world and x-front y-left z-up for body) to model frame (NED for world and x-front y-right z-down), see paper
         y_init_temp = y_init
@@ -303,17 +303,40 @@ class mpc:
         
         p = np.zeros((N+1)*n_states + N*n_controls)    
 
-        for k in range(0,N+1): #new - set the reference to track
-            t_predict = (k)*T # predicted time instant
-            x_ref = x_target + v_x_target*t_predict
-            y_ref = y_target + v_y_target*t_predict   
-            
-            if x_ref > x_target + 4:
-                x_ref = x_target + 4
-            
-            p[(n_states+n_controls)*(k):(n_states+n_controls)*k + n_states] = [x_ref, y_ref, 0, 0, 0, 0] #check if 28*2 because two motors
-            if k != N:
-                p[(n_states+n_controls)*(k)+n_states:(n_states+n_controls)*(k) + n_states + n_controls] = [0, 0]
+        if (trajectory_tracking):
+            print('tracking trajectory')
+            psi_ref = ca.mod(math.atan2((y_target),(x_target)) + 2*pi, 2*pi)
+            x_target, y_target = self.p4([0, 0], [x_target, y_target], [x_init, y_init])
+            #print(x_target, y_target)
+            print(psi_ref)
+
+            for k in range(0,N+1): #new - set the reference to track
+                t_predict = (k)*T # predicted time instant
+                x_ref = x_target + self.max_u*cos(psi_ref)*t_predict
+                y_ref = y_target + self.max_u*sin(psi_ref)*t_predict
+
+                if np.abs(x_ref) - np.abs(x_target) > 0:
+                    x_ref = 0
+                if np.abs(y_ref) - np.abs(y_target) > 0:
+                    y_ref = 50
+                
+                p[(n_states+n_controls)*(k):(n_states+n_controls)*k + n_states] = [x_ref, y_ref, psi_ref, self.max_u, 0, 0] #check if 28*2 because two motors
+                if k != N:
+                    p[(n_states+n_controls)*(k)+n_states:(n_states+n_controls)*(k) + n_states + n_controls] = [0, 0]
+
+
+        else: #collision avoidance
+            for k in range(0,N+1): #new - set the reference to track
+                t_predict = (k)*T # predicted time instant
+                x_ref = x_target + v_x_target*t_predict
+                y_ref = y_target + v_y_target*t_predict   
+                
+                if x_ref > x_target + 4:
+                    x_ref = x_target + 4
+                
+                p[(n_states+n_controls)*(k):(n_states+n_controls)*k + n_states] = [x_ref, y_ref, 0, 0, 0, 0] #check if 28*2 because two motors
+                if k != N:
+                    p[(n_states+n_controls)*(k)+n_states:(n_states+n_controls)*(k) + n_states + n_controls] = [0, 0]
 
         p[0], p[1], p[2], p[3], p[4], p[5] = x_init, y_init, yaw_init, self.u, self.v, r_init
         args['p'] = p
@@ -328,8 +351,6 @@ class mpc:
             ubg=args['ubg'],
             p=args['p']
         )
-
-
 
         #Extract and seperate control and signal data from solver output
         u = ca.reshape(sol['x'][n_states * (N + 1):], n_controls, N)
@@ -377,8 +398,10 @@ class mpc:
             drone_to_foreign_boat = self.calculate_bearing([self.x_init, self.y_init], self.foreign_boat_pos)
             
             if self.isright(drone_to_dest, drone_to_foreign_boat):
+                trajectory_tracking = False
                 x_target, y_target = self.foreign_boat_pos[0], self.foreign_boat_pos[1]-5
             else:
+                trajectory_tracking = True
                 x_target, y_target = x_ultimate_target, y_ultimate_target
 
             if self.isTargetReached(x_ultimate_target, y_ultimate_target):
@@ -387,8 +410,7 @@ class mpc:
 
             
             print('TARGET:   ', x_target, y_target)
-            cont_XP1, cont_XP2 = self.optimize(self.x_init, self.y_init, self.yaw, self.u, self.v, self.r, x_target, y_target, 0, 2)
-            
+            cont_XP1, cont_XP2 = self.optimize(self.x_init, self.y_init, self.yaw, self.u, self.v, self.r, x_target, y_target, 0, 2, trajectory_tracking)
             #Scaling control to 1 to -1
             if cont_XP1 < 0 :
                 cont_XP1 = cont_XP1/np.abs(self.max_bwd_F)
