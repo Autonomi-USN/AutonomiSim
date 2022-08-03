@@ -578,7 +578,6 @@ def drawObstacle(trajectory):
 
 service = rospy.Service('run_mpc', SetPose, service_cb)
 
-
 rospy.init_node('publisher_thruster_right', anonymous=True)
 rate = rospy.Rate(10)
 rospy.spin()

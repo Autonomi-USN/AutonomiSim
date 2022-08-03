@@ -9,7 +9,7 @@ from geometry_msgs.msg import Twist
 import actionlib
 from actionlib_msgs.msg import GoalID
 from usn_navigation.msg import LOSAction, LOSResult, LOSFeedback
-from visualize_path import VisualizePath
+from usn_navigation.src.path_viz.visualize_path import VisualizePath
 #! action server for Line Of Sight Guidance between two points at a time, takes an array of points and iterates through them
 #! The current Linear Thrust control is very primitive and should probably be looked at for improvement.
 #! With current implementation there is a chance that the boat will surpass the target if the target is too close to the starting position.

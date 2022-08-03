@@ -177,7 +177,7 @@ class mpc:
                         u*sin(theta)+ v*cos(theta),\
                         r,\
                         (-Xu*u + (XP1+XP2) + (m-Ydotv)*v*r)/(m-Xdotu),\
-                        (-Yv*v + (m-Xdotu)*u*r)/(m-Ydotv),\
+                        (-Yv*v - (m-Xdotu)*u*r)/(m-Ydotv),\
                         ((XP1-XP2)*dp - Nr*r + u*v*((m-Xdotu)-(m-Ydotv)))/(Iz-Ndotr))
 
         # maps controls from [va, vb, vc, vd].T to [vx, vy, omega].T
@@ -397,7 +397,6 @@ class mpc:
             
             self.pub_left_thrust.publish(cont_XP1)
             self.pub_right_thrust.publish(cont_XP2)
-
 
 
 if __name__ == "__main__":

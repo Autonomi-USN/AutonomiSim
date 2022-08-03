@@ -136,6 +136,7 @@ class PDLineOfSight:
         self.foreign_boat_pos = [data.pose.position.x, data.pose.position.y]
 
     def execute(self): #runs on each new action goal
+        flag = 1
         rospy.wait_for_message('/gazebo/set_model_state', ModelState)
         x_k1_ultimate, y_k1_ultimate = 50, 0
 
@@ -150,10 +151,14 @@ class PDLineOfSight:
             drone_to_foreign_boat = self.calculate_bearing([self.x, self.y], self.foreign_boat_pos) #angle between seadrone and detected boat
             
             if self.isright(drone_to_dest, drone_to_foreign_boat):
+                flag = 1
                 self.x_k, self.y_k = self.x, self.y
-                self.x_k1, self.y_k1 = self.foreign_boat_pos[0]-1.225, self.foreign_boat_pos[1]-1.225 #trail boat
+                self.x_k1, self.y_k1 = self.foreign_boat_pos[0], self.foreign_boat_pos[1] - 2  #trail boat
             else:
-                self.x_k1, self.y_k1 = x_k1_ultimate, y_k1_ultimate  #proceed to ultimate target    
+                self.x_k1, self.y_k1 = x_k1_ultimate, y_k1_ultimate  #proceed to ultimate target
+                if flag:
+                    self.x_k, self.y_k = self.x, self.y
+                    flag = 0
             
             print("position: ", self.x, self.y)
             print("k_position: ", self.x_k, self.y_k)
