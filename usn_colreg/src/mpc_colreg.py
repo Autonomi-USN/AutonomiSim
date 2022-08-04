@@ -4,41 +4,15 @@ from pyrr import Vector3
 from tf.transformations import euler_from_quaternion
 import casadi as ca
 import numpy as np
-from casadi import sin, cos, pi
-import matplotlib.pyplot as plt
-from variables import *
 import rospy
 from sensor_msgs.msg import NavSatFix, Imu
-from  geometry_msgs.msg import Vector3Stamped
-from std_msgs.msg import Float32
 import casadi as ca
 import numpy as np
-import rospy
-import matplotlib.pyplot as plt
 import pymap3d as pm
 from casadi import sin, cos, pi
 from variables import *
-from std_msgs.msg import Float32
-from time import time
-from casadi import sin, cos, pi
-from sensor_msgs.msg import NavSatFix
-from sensor_msgs.msg import Imu
-from geometry_msgs.msg import Vector3Stamped
 from tf.transformations import euler_from_quaternion
-import casadi as ca
-import numpy as np
-import rospy
-import matplotlib.pyplot as plt
-import pymap3d as pm
-from casadi import sin, cos, pi
 from variables import *
-from std_msgs.msg import Float32
-from time import time
-from casadi import sin, cos, pi
-from sensor_msgs.msg import NavSatFix
-from sensor_msgs.msg import Imu
-from geometry_msgs.msg import Vector3Stamped
-from tf.transformations import euler_from_quaternion
 import math
 from nav_msgs.msg import Odometry
 from gazebo_msgs.msg import ModelState

@@ -151,14 +151,14 @@ class PDLineOfSight:
             drone_to_foreign_boat = self.calculate_bearing([self.x, self.y], self.foreign_boat_pos) #angle between seadrone and detected boat
             
             if self.isright(drone_to_dest, drone_to_foreign_boat):
-                flag = 1
                 self.x_k, self.y_k = self.x, self.y
-                self.x_k1, self.y_k1 = self.foreign_boat_pos[0], self.foreign_boat_pos[1] - 2  #trail boat
+                self.x_k1, self.y_k1 = self.foreign_boat_pos[0], self.foreign_boat_pos[1]   #trail boat
             else:
-                self.x_k1, self.y_k1 = x_k1_ultimate, y_k1_ultimate  #proceed to ultimate target
-                if flag:
+                if flag == 1:
                     self.x_k, self.y_k = self.x, self.y
                     flag = 0
+                self.x_k1, self.y_k1 = x_k1_ultimate, y_k1_ultimate  #proceed to ultimate target
+
             
             print("position: ", self.x, self.y)
             print("k_position: ", self.x_k, self.y_k)
@@ -177,7 +177,10 @@ class PDLineOfSight:
                 self.error_prev = self.error
                 
                 self.twist_msg.angular.z = -self.delta_n
-                self.twist_msg.linear.x = np.min([self.distance_from_goal() * 0.1, 1])
+                if flag:
+                    self.twist_msg.linear.x = np.min([self.distance_from_goal() * 0.1, 1])
+                else:
+                    self.twist_msg.linear.x = 1
                 self.pub.publish(self.twist_msg)
                 #print(self.twist_msg)
                 self.rate.sleep()
