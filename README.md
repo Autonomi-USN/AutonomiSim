@@ -9,7 +9,7 @@ This repository is the home to the source code for the USN SeaDrone simulation i
 
 ## Startup
 
-To start the simulation, run the ```usn_drone_gazebo/launch/usn_drone.launch``` launch file: \
+To start the simulation, run the ```usn_drone_gazebo/launch/main_setup.launch``` launch file: \
 ```roslaunch usn_drone_gazebo main_setup.launch``` \
 This launch file initializes the example_world gazebo map, and spawns the robot. \
 The file also launches the localization node, and the cmd_vel, which simplifies the development of autonomous navigation. 
