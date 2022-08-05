@@ -7,12 +7,6 @@ This repository is the home to the source code for the USN SeaDrone simulation i
 - Hydrodynamics, localization, navigation  
 <br />
 
-<<<<<<< HEAD
-![VRX](images/sydney_regatta.png)
-![Ubuntu CI](https://github.com/osrf/vrx/workflows/Ubuntu%20CI/badge.svg)
-1
-## Getting Started
-=======
 ## Startup
 
 To start the simulation, run the ```usn_drone_gazebo/launch/usn_drone.launch``` launch file: \
@@ -39,7 +33,6 @@ When the server receives a goal, it iterates through the list of positions (x, y
 - Edvart Grüner Bjerke
 
 </br></br></br></br>
->>>>>>> 11cbdfa8645483fead1707b0c689fc199567a083
 
 
 
