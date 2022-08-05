@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- Includes all macros in this package so they don't need to be included individualy -->
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="WAM-V">
+       <!-- Include dynamics macros -->
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/dynamics/usn_drone_gazebo_dynamics_plugin.xacro" />
+
+       <!-- Include sensor macros -->
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_camera.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_gps.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_imu.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_planar_lidar.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_3d_lidar.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/lidar.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_p3d.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/usn_drone_pinger.xacro" />
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/wamv_camera.xacro" />
+
+       <!-- Include ball shooter macros -->
+       <xacro:include filename="$(find usn_drone_gazebo)/urdf/components/ball_shooter.xacro" />
+</robot>
