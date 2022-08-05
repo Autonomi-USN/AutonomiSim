@@ -107,14 +107,10 @@ class PDLineOfSight:
             self.pub.publish(self.twist_msg)
             
             
-            
-            
-            
-            
             #publish error for live plotting 
-            msg = Float32()
-            msg.data = self.error        
-            self.pub_error.publish(msg)
+            #msg = Float32()
+            #msg.data = self.error        
+            #self.pub_error.publish(msg)
             
             print('---------------------')
             print('| x         |',np.round(self.x, 3))

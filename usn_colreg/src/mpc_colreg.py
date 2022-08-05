@@ -16,7 +16,7 @@ from variables import *
 import math
 from nav_msgs.msg import Odometry
 from gazebo_msgs.msg import ModelState
-
+from std_msgs.msg import Float32
 
 class mpc:
     def __init__(self):
@@ -242,8 +242,6 @@ class mpc:
         y_target_temp = y_target
         y_target = x_target
         x_target = y_target_temp
-
-
 
         n_states = 6
         n_controls = 2
