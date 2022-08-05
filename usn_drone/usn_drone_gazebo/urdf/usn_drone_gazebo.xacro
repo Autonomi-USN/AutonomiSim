@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- Include macros for dynamics plugins -->
+  <xacro:include filename="$(find usn_drone_gazebo)/urdf/macros.xacro" />
+  <!-- Macro to create a WAM-V with dyanmics plugins and a customizeable thruster layout -->
+  <xacro:macro  name="usn_drone_gazebo" params="thruster_layout">
+    <!-- Defines the base vehicle -->
+    <xacro:include filename="$(find usn_drone_description)/urdf/usn_drone.urdf.xacro" />
+    <!-- Thruster Layout -->
+    <xacro:include filename="${thruster_layout}"/>
+    <!-- Attach hydrodynamics plugin -->
+    <xacro:usv_dynamics_gazebo name="usn_drone_dynamics_plugin"/>
+  </xacro:macro>
+</robot>
