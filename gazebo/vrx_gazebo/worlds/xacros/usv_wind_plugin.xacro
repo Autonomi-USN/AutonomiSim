@@ -3,13 +3,8 @@
   <xacro:macro name="usv_wind_gazebo"
                params="**wind_objs
                          direction:=0
-<<<<<<< HEAD
-                         mean_vel:= 0
-                         var_gain:=0
-=======
                          mean_vel:= 3
                          var_gain:=1
->>>>>>> master
                          var_time:=2.0
                          seed:=''
                          ros_update_rate:=10
