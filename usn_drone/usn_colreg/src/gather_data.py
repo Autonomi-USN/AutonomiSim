@@ -26,8 +26,10 @@ class ROSNode:
 
 
     def seadrone_cb(self, msg):
+        
         position = msg.pose.pose.position
-        self.seadrone_data.append([position.x, position.y, time.time() - self.start_time])
+        x, y = position.x, position.y
+        self.seadrone_data.append([x, y, time.time() - self.start_time])
         self.rate.sleep()
 
 
@@ -46,7 +48,7 @@ if __name__ == "__main__":
     rospy.init_node('data_gather')
     node = ROSNode()
     #path_boat = '/home/ros/vrx_ws/src/vrx/usn_colreg/src/data/LOS_0_0/boat.csv'
-    path_seadrone = '/home/ros/vrx_ws/src/vrx/usn_colreg/src/data/MPC_no_traj/seadrone.csv'
+    path_seadrone = '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/heavy_waters/MPC_no_traj/seadrone.csv'
 
     while not rospy.is_shutdown():
         rospy.spin()

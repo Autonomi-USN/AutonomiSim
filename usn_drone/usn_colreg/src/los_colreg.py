@@ -152,7 +152,7 @@ class PDLineOfSight:
             
             if self.isright(drone_to_dest, drone_to_foreign_boat):
                 self.x_k, self.y_k = self.x, self.y
-                self.x_k1, self.y_k1 = self.foreign_boat_pos[0], self.foreign_boat_pos[1]   #trail boat
+                self.x_k1, self.y_k1 = self.foreign_boat_pos[0], self.foreign_boat_pos[1]-3   #trail boat
             else:
                 if flag == 1:
                     self.x_k, self.y_k = self.x, self.y
@@ -177,10 +177,7 @@ class PDLineOfSight:
                 self.error_prev = self.error
                 
                 self.twist_msg.angular.z = -self.delta_n
-                if flag:
-                    self.twist_msg.linear.x = np.min([self.distance_from_goal() * 0.1, 1])
-                else:
-                    self.twist_msg.linear.x = 1
+                self.twist_msg.linear.x = np.min([self.distance_from_goal() * 0.1, 1])
                 self.pub.publish(self.twist_msg)
                 #print(self.twist_msg)
                 self.rate.sleep()

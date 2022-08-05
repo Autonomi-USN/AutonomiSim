@@ -4,8 +4,8 @@
                params="**wind_objs
                          direction:=0
                          mean_vel:= 0
-                         var_gain:=0
-                         var_time:=2.0
+                         var_gain:=10
+                         var_time:=1
                          seed:=''
                          ros_update_rate:=10
                          topic_wind_speed:=/vrx/debug/wind/speed
@@ -18,7 +18,7 @@
       <!-- Wind -->
       <wind_direction>0</wind_direction> <!-- in degrees -->
       <wind_mean_velocity>0</wind_mean_velocity>
-      <var_wind_gain_constants>1</var_wind_gain_constants>
+      <var_wind_gain_constants>2.3</var_wind_gain_constants>
       <var_wind_time_constants>2</var_wind_time_constants>
       <random_seed>0</random_seed> <!-- set to zero/empty to randomize -->
       <update_rate>10</update_rate>

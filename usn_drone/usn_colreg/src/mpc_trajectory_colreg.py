@@ -72,6 +72,7 @@ class mpc:
         self.x_init, self.y_init, self.yaw = 0, 0, 0
         self.u, self.v, self.r = 0, 0, 0
         self.tic = 0
+        self.flag = 1
 
     def foreignBoatPosCb(self, data):
         self.foreign_boat_pos = [data.pose.position.x, data.pose.position.y]
@@ -306,20 +307,21 @@ class mpc:
         if (trajectory_tracking):
             print('tracking trajectory')
             psi_ref = ca.mod(math.atan2((y_target),(x_target)) + 2*pi, 2*pi)
-            x_target, y_target = self.p4([0, 0], [x_target, y_target], [x_init, y_init])
-            #print(x_target, y_target)
-            print(psi_ref)
+
+            x_target_traj, y_target_traj = self.p4([0, 0], [x_target, y_target], [x_init, y_init])
+
 
             for k in range(0,N+1): #new - set the reference to track
                 t_predict = (k)*T # predicted time instant
-                x_ref = x_target + self.max_u*cos(psi_ref)*t_predict
-                y_ref = y_target + self.max_u*sin(psi_ref)*t_predict
+                x_ref = x_target_traj + self.max_u*cos(psi_ref)*t_predict
+                y_ref = y_target_traj + self.max_u*sin(psi_ref)*t_predict
 
                 if np.abs(x_ref) - np.abs(x_target) > 0:
                     x_ref = 0
                 if np.abs(y_ref) - np.abs(y_target) > 0:
                     y_ref = 50
                 
+                print(x_ref, y_ref)
                 p[(n_states+n_controls)*(k):(n_states+n_controls)*k + n_states] = [x_ref, y_ref, psi_ref, self.max_u, 0, 0] #check if 28*2 because two motors
                 if k != N:
                     p[(n_states+n_controls)*(k)+n_states:(n_states+n_controls)*(k) + n_states + n_controls] = [0, 0]
@@ -357,13 +359,12 @@ class mpc:
         X0 = ca.reshape(sol['x'][: n_states * (N+1)], n_states, N+1)
         cont_XP1 = self.DM2Arr(u[0, 0])
         cont_XP2 = self.DM2Arr(u[1, 0])
-        print(cont_XP1, cont_XP2)
         return cont_XP1, cont_XP2
 
     def DM2Arr(self,dm):
         return np.array(dm.full())
 
-    def p4(self, p1, p2, p3):
+    def p4(self, p1, p2, p3): # p1:
         x1, y1 = p1
         x2, y2 = p2
         if p1 == p2:
@@ -377,7 +378,6 @@ class mpc:
     def isTargetReached(self, x_target, y_target):
         state_init = np.array([self.x_init, self.y_init, self.yaw])
         state_target = np.array([x_target, y_target, 0])
-        print(ca.norm_2(state_init[0:2] - state_target[0:2]))
 
         if (ca.norm_2(state_init[0:2] - state_target[0:2]) < 1):
             return True
@@ -409,7 +409,7 @@ class mpc:
                 break
 
             
-            print('TARGET:   ', x_target, y_target)
+            #print('TARGET:   ', x_target, y_target)
             cont_XP1, cont_XP2 = self.optimize(self.x_init, self.y_init, self.yaw, self.u, self.v, self.r, x_target, y_target, 0, 2, trajectory_tracking)
             #Scaling control to 1 to -1
             if cont_XP1 < 0 :

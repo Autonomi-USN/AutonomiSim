@@ -34,7 +34,6 @@ class MovingBoat:
             self.pub_state.publish(self.model_state)
             self.i += 1
             self.rate.sleep()
-            print(self.position.x, self.position.y)
         else:
             self.model_state.pose.position = self.position 
             self.model_state.pose.orientation = orientation

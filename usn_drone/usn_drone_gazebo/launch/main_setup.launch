@@ -72,11 +72,5 @@
   <include file="$(find usn_drone_gazebo)/launch/pointcloud_to_laserscan.launch" />
   <node name="cmd_vel_to_thrust" pkg="usn_navigation" type="cmd_vel.py" />
   <!--node name="set_heading" pkg="mpc" type="set_heading.py" output="screen"/-->
-  
-  
-  
   <include file="$(find usn_drone_gazebo)/launch/localization.launch" />   
-
-
-
 </launch>
