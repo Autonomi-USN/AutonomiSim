@@ -15,7 +15,9 @@
         <wind_obj>
           <name>usn_drone</name>
           <link_name>usn_drone/base_link</link_name>
+          <!-- uncomment to enable wind impact on boat -->
           <coeff_vector>.2 .2 .12</coeff_vector>
+          <!-- <coeff_vector>0 0 0</coeff_vector> -->
         </wind_obj>
       </wind_objs>
     </xacro:usv_wind_gazebo>

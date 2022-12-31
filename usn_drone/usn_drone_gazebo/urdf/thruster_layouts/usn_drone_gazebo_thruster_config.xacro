@@ -13,7 +13,7 @@
       <!-- Optional Parameters -->
       <mappingType>1</mappingType>
       <maxCmd>1</maxCmd>
-      <maxForceFwd>28</maxForceFwd>
+      <maxForceFwd>20</maxForceFwd>
       <maxForceRev>-20</maxForceRev>
       <maxAngle>${pi/2}</maxAngle>
     </thruster>

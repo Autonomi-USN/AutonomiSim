@@ -4,7 +4,7 @@ from geometry_msgs.msg import Twist
 #from kingfisher_msgs.msg import Drive
 from std_msgs.msg import Float32
 import numpy as np
-
+from nav_msgs.msg import Odometry
 
 
 class Node():
@@ -13,23 +13,25 @@ class Node():
         self.angular_scaling = angular_scaling
 
         self.cmd_sub = rospy.Subscriber('/cmd_vel', Twist, self.callback, queue_size=10)
+        #self.odom_sub = rospy.Subscriber('/usn_drone/robot_localization/odometry/filtered', Odometry, self.odom_cb)
         self.right_pub = rospy.Publisher('/usn_drone/thrusters/left_thrust_cmd', Float32, queue_size=10)
         self.left_pub = rospy.Publisher('/usn_drone/thrusters/right_thrust_cmd', Float32, queue_size=10)
 
         self.driveMsgLeft = Float32()
         self.driveMsgRight = Float32()
+
+        self.x = self.y = self.yaw = None #x position, y position, yaw angle
+        self.yaw_rate = None #angular velocity
+        self.linear_x = None #linear velocity, x (surge velocity), in the body frame
+
+
+    # def odom_cb(self, msg):
+    #     self.yaw_rate = msg.twist.twist.angular.z
+    #     self.linear_x = msg.twist.twist.linear.x
         
     def callback(self,data):
-        linfac = self.linear_scaling
-        angfac = self.angular_scaling
-
-        # if data.linear.x > 1:
-        #     data.linear.x = 1
-        # elif data.linear.x < -1:
-        #     data.linear.x = 1
-        
-        self.driveMsgRight.data = linfac*data.linear.x - angfac*data.angular.z
-        self.driveMsgLeft.data = linfac*data.linear.x + angfac*data.angular.z
+        self.driveMsgRight.data = data.linear.x - data.angular.z
+        self.driveMsgLeft.data = data.linear.x + data.angular.z
 
         self.left_pub.publish(self.driveMsgLeft)
         self.right_pub.publish(self.driveMsgRight)

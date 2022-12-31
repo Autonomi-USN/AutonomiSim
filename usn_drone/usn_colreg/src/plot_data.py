@@ -4,19 +4,19 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-path_boat = '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/collision_boat.csv'
+path_boat = '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/collision_boat.csv'
 
 #algorithm configurations for comparison
-path_los_0_0 =                      '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/still_waters/LOS_0_0/seadrone.csv'
-path_los_0_line_static =            '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/still_waters/LOS_0_line_static/seadrone.csv'
-path_los_still =                    '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/still_waters/LOS_line_dynamic_line_static/seadrone.csv'
-path_los_heavy =                    '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/heavy_waters/LOS_line_dynamic_line_static/seadrone.csv'
+path_los_0_0 =                      '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/still_waters/LOS_0_0/seadrone.csv'
+path_los_0_line_static =            '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/still_waters/LOS_0_line_static/seadrone.csv'
+path_los_still =                    '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/still_waters/LOS_line_dynamic_line_static/seadrone.csv'
+path_los_heavy =                    '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/heavy_waters/LOS_line_dynamic_line_static/seadrone.csv'
 
-path_mpc_no_traj_still =                  '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/still_waters/MPC_no_traj/seadrone.csv'
-path_mpc_no_traj_heavy =                  '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/heavy_waters/MPC_no_traj/seadrone.csv'
+path_mpc_no_traj_still =                  '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/still_waters/MPC_no_traj/seadrone.csv'
+path_mpc_no_traj_heavy =                  '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/heavy_waters/MPC_no_traj/seadrone.csv'
 
-path_mpc_traj_0 =                   '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/still_waters/MPC_traj_0/seadrone.csv'
-path_mpc_traj_init =                '/home/ros/vrx_ws/src/vrx/usn_drone/usn_colreg/src/data/still_waters/MPC_traj_init/seadrone.csv'
+path_mpc_traj_0 =                   '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/still_waters/MPC_traj_0/seadrone.csv'
+path_mpc_traj_init =                '/home/punk/vrx/src/AutonomiSim/usn_drone/usn_colreg/src/data/still_waters/MPC_traj_init/seadrone.csv'
 
 
 

@@ -74,8 +74,6 @@ class PDLineOfSight:
         self.psi = euler_from_quaternion((quat.x, quat.y, quat.z, quat.w))[2] - pi/2
         if self.psi < (-pi):
             self.psi = self.psi+2*pi
-
-        
         self.x, self.y = position.x, position.y
 
         if self.distance_from_goal() > 0.5:
@@ -100,17 +98,9 @@ class PDLineOfSight:
             self.delta_n = self.PD_controller()
             self.error_prev = self.error
             
-
             self.twist_msg.angular.z = -self.delta_n
             self.twist_msg.linear.x = np.min([self.distance_from_goal() * 0.1, 1])
-
             self.pub.publish(self.twist_msg)
-            
-            
-            #publish error for live plotting 
-            #msg = Float32()
-            #msg.data = self.error        
-            #self.pub_error.publish(msg)
             
             print('---------------------')
             print('| x         |',np.round(self.x, 3))
